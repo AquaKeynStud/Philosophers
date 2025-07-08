@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 18:21:38 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 15:42:57 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:44:58 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,11 @@ void	ms_wait(long ms)
 	start = get_time();
 	if (ms > 2)
 		usleep((ms - 2) * 1000);
-
 	while (1)
 	{
 		elapsed = get_time() - start;
 		if (elapsed >= ms)
-			break;
+			break ;
 		usleep(50);
 	}
 }

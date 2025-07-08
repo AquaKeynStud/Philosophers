@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 18:52:39 by arocca            #+#    #+#             */
-/*   Updated: 2025/06/18 21:36:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:44:36 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	wait_all(t_data *data, pthread_t monitor)
 {
 	int	i;
-	
+
 	i = 0;
 	pthread_join(monitor, NULL);
 	while (i < data->params.philos_count)
@@ -25,7 +25,7 @@ void	wait_all(t_data *data, pthread_t monitor)
 void	cleanup(t_data *data)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < data->params.philos_count)
 	{

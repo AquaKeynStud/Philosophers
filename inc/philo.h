@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 16:18:29 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:50:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <pthread.h>
 
 /* -- Structures -- */
-typedef struct	s_params
+typedef struct s_params
 {
 	int	max_meals;
 	int	time_to_die;
@@ -43,7 +43,7 @@ typedef struct s_philo
 	struct s_data	*monitoring;
 }				t_philo;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	bool			stop;
 	long			start;
@@ -65,13 +65,9 @@ void	exit_err(char *message);
 long	timestamp(t_data *data);
 int		ft_atoi(const char *nptr);
 size_t	ft_strlen(const char *str);
-int 	start_philosophers(t_data *data);
-bool	everyone_ate_enough(t_data *data);
+int		start_philosophers(t_data *data);
 void	wait_all(t_data *data, pthread_t monitor);
-int 	start_monitor(t_data *data, pthread_t *monitor_thread);
+int		start_monitor(t_data *data, pthread_t *monitor_thread);
 void	print(t_data *data, t_philo *philo, long ts, char *msg);
-
-bool	philo_died(t_data *data);
-bool	everyone_ate_enough(t_data *data);
 
 #endif

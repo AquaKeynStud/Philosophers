@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:04 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 16:23:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:52:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,12 @@ bool	philo_died(t_data *data)
 	return (false);
 }
 
-bool everyone_ate_enough(t_data *data)
+static bool	everyone_ate_enough(t_data *data)
 {
-	t_philo	*philos = data->philos;
+	t_philo	*philos;
 	int		i;
 
+	philos = data->philos;
 	if (data->params.max_meals <= 0)
 		return (false);
 	i = 0;
@@ -66,14 +67,13 @@ void	*monitoring(void *arg)
 	t_data	*data;
 
 	data = (t_data *)arg;
-
 	while (1)
 	{
 		if (philo_died(data))
 			break ;
 		else if (everyone_ate_enough(data))
 			break ;
-		ms_wait(0.8);
+		ms_wait(0.9);
 	}
 	pthread_mutex_lock(&data->state);
 	data->stop = true;

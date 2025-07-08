@@ -1,0 +1,4 @@
+- Les pauses entre les timestamps
+- Les timestamps qui s'affichent pas assez vite et sont désordonnés
+- parametres lettres
+- philosophe qui dort trop ne meurt pas forcément...
