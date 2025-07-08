@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/06/18 21:42:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/05 11:00:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static void	init_philos(t_data *data)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].meals = 0;
+		data->philos[i].is_eating = false;
 		data->philos[i].monitoring = data;
 		data->philos[i].last_meal = data->start;
 		data->philos[i].left_fork = &data->forks[i];

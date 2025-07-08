@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/06/18 21:33:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/07 10:00:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_philo
 {
 	int				id;
 	int				meals;
+	bool			is_eating;
 	long			last_meal;
 	pthread_t		thread;
 	pthread_mutex_t	meal_mutex;
@@ -68,5 +69,9 @@ bool	everyone_ate_enough(t_data *data);
 void	wait_all(t_data *data, pthread_t monitor);
 int 	start_monitor(t_data *data, pthread_t *monitor_thread);
 void	print(t_data *data, t_philo *philo, long ts, char *msg);
+
+bool	is_dead(t_philo *philo, int ttk);
+bool	philo_died(t_data *data);
+bool	everyone_ate_enough(t_data *data);
 
 #endif

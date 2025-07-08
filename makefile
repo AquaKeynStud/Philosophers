@@ -25,11 +25,13 @@ D_OBJ	=	.obj/
 D_DEP	=	.dep/
 
 # file lists
-LST_SRC		=	main.c		\
-				time.c		\
-				simu.c		\
-				utils.c		\
-				cleanup.c
+LST_SRC		=	main.c			\
+				time.c			\
+				simu.c			\
+				utils.c			\
+				cleanup.c		\
+				monitoring.c	\
+				philosophers.c
 
 LST_INC		=	philo.h
 

@@ -6,33 +6,13 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 09:46:17 by arocca            #+#    #+#             */
-/*   Updated: 2025/06/18 21:27:10 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 15:09:19 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <limits.h>
 #include <stdlib.h>
-
-bool	everyone_ate_enough(t_data *data)
-{
-	int	i;
-	int	done;
-
-	i = 0;
-	done = 0;
-	pthread_mutex_lock(&data->state);
-	while (i < data->params.philos_count)
-	{
-		if (data->params.max_meals && data->philos[i].meals >= data->params.max_meals)
-			done++;
-		i++;
-	}
-	if (done == data->params.philos_count)
-		data->stop = true;
-	pthread_mutex_unlock(&data->state);
-	return (done == data->params.philos_count);
-}
 
 bool	stopped(t_data *data)
 {
