@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/05 11:00:16 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:20:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void	init_data(t_data *data, char **argv)
 	{
 		printf("0 1 has taken a fork\n");
 		ms_wait(data->params.time_to_die);
-		printf("%ld 1 died\n", timestamp(data));
+		printf("%d 1 died\n", data->params.time_to_die);
 		return ;
 	}
 	if (pthread_mutex_init(&data->printer, NULL))
@@ -101,7 +101,7 @@ static void	init_data(t_data *data, char **argv)
 		pthread_mutex_destroy(&data->printer);
 		exit_err("State mutex init failed");
 	}
-	data->start = get_time() + (100 * data->params.philos_count);
+	data->start = get_time() + 50;
 	init_forks(data);
 	init_philos(data);	
 }
@@ -112,7 +112,13 @@ int main(int argc, char **argv)
 	pthread_t	monitor;
 
 	if (argc != 5 && argc != 6)
+	{
+		write(2, "\n\e[1m\e[31mUsage:\t", 17);
+		write(2, argv[0], ft_strlen(argv[0]));
+		write(2, " [nb_philos] [time to die] [time to eat]", 40);
+		write(2, " [time to sleep] (optionnal : max heal nb)\n\n\e[0m", 48);
 		return (1);
+	}
 	init_data(&data, argv);
 	if (data.params.philos_count == 1)
 		return (0);

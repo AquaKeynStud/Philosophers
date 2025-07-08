@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 09:46:17 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 15:09:19 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:18:20 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,15 @@ bool	stopped(t_data *data)
 
 void	print(t_data *data, t_philo *philo, long ts, char *msg)
 {
-	if (stopped(data) || everyone_ate_enough(data))
-		return ;
 	pthread_mutex_lock(&data->printer);
-	printf("%ld %d %s\n", ts, philo->id, msg);
+	pthread_mutex_lock(&data->state);
+	if (!data->stop)
+		printf("%ld %d %s\n", ts, philo->id, msg);
+	pthread_mutex_unlock(&data->state);
 	pthread_mutex_unlock(&data->printer);
 }
 
-static size_t	ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 

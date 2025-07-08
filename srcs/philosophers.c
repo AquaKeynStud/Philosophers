@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:30 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 15:08:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 15:43:22 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,57 +14,55 @@
 
 static bool	take_forks(t_data *data, t_philo *philo)
 {
-	if (stopped(data) || everyone_ate_enough(data))
-		return (false);
-
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(philo->right_fork);
-		if (stopped(data) || everyone_ate_enough(data))
+		print(data, philo, timestamp(data), "has taken a fork");
+		if (stopped(data))
 		{
 			pthread_mutex_unlock(philo->right_fork);
 			return (false);
 		}
 		pthread_mutex_lock(philo->left_fork);
+		print(data, philo, timestamp(data), "has taken a fork");
 	}
 	else
 	{
 		pthread_mutex_lock(philo->left_fork);
-		if (stopped(data) || everyone_ate_enough(data))
+		print(data, philo, timestamp(data), "has taken a fork");
+		if (stopped(data))
 		{
 			pthread_mutex_unlock(philo->left_fork);
 			return (false);
 		}
 		pthread_mutex_lock(philo->right_fork);
+		print(data, philo, timestamp(data), "has taken a fork");
 	}
 
 	// Re-vérifie l’état après avoir les deux
-	if (stopped(data) || everyone_ate_enough(data))
+	if (stopped(data))
 	{
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);
 		return (false);
 	}
-
-	print(data, philo, timestamp(data), "has taken a fork");
-	print(data, philo, timestamp(data), "has taken a fork");
 	return (true);
 }
 
 static void	eat(t_data *data, t_philo *philo)
 {
 	if (!take_forks(data, philo))
-		return;
+		return ;
 
 	philo->is_eating = true;
-	print(data, philo, timestamp(data), "is eating");
 	ms_wait(data->params.time_to_eat);
-
+	print(data, philo, timestamp(data), "is eating");
+	
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = get_time();
 	philo->meals++;
 	pthread_mutex_unlock(&philo->meal_mutex);
-
+	
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 	philo->is_eating = false;
@@ -72,25 +70,24 @@ static void	eat(t_data *data, t_philo *philo)
 
 void	*routine(void *arg)
 {
-	t_philo	*philo = (t_philo *)arg;
-	t_data	*data = philo->monitoring;
+	t_philo	*philo;
+	t_data	*data;
 
+	philo = (t_philo *)arg;
+	data = philo->monitoring;
 	while (get_time() < data->start)
-		usleep(50);
-	while (!stopped(data) || everyone_ate_enough(data))
+		usleep(100);
+	while (!stopped(data))
 	{
-		if (stopped(data) || everyone_ate_enough(data))
-			return (NULL);
-
 		print(data, philo, timestamp(data), "is thinking");
 
-		if (stopped(data) || everyone_ate_enough(data))
-			return (NULL);
+		if (stopped(data))
+			break ;
 
 		eat(data, philo);
 
-		if (stopped(data) || everyone_ate_enough(data))
-			return (NULL);
+		if (stopped(data))
+			break ;
 
 		print(data, philo, timestamp(data), "is sleeping");
 		ms_wait(data->params.time_to_sleep);

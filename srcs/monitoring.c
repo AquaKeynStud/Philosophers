@@ -6,18 +6,19 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:04 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 15:08:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/08 16:23:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	is_dead(t_philo *philo, int ttk)
+static bool	is_dead(t_data *data, t_philo *philo, int ttk)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
 	if (get_time() - philo->last_meal >= ttk && !philo->is_eating)
 	{
 		pthread_mutex_unlock(&philo->meal_mutex);
+		print(data, philo, timestamp(data), "died");
 		return (true);
 	}
 	pthread_mutex_unlock(&philo->meal_mutex);
@@ -31,39 +32,33 @@ bool	philo_died(t_data *data)
 	i = 0;
 	while (i < data->params.philos_count)
 	{
-		if (is_dead(&data->philos[i], data->params.time_to_die))
-		{
-			print(data, &data->philos[i], timestamp(data), "died");
-			pthread_mutex_lock(&data->state);
-			data->stop = true;
-			pthread_mutex_unlock(&data->state);
+		if (is_dead(data, &data->philos[i], data->params.time_to_die))
 			return (true);
-		}
 		i++;
 	}
 	return (false);
 }
 
-bool	everyone_ate_enough(t_data *data)
+bool everyone_ate_enough(t_data *data)
 {
-	int	i;
-	int	done;
-	t_philo	*philos;
+	t_philo	*philos = data->philos;
+	int		i;
 
-	i = 0;
-	done = 0;
-	philos = data->philos;
 	if (data->params.max_meals <= 0)
 		return (false);
+	i = 0;
 	while (i < data->params.philos_count)
 	{
 		pthread_mutex_lock(&philos[i].meal_mutex);
-		if (philos[i].meals >= data->params.max_meals)
-			done++;
+		if (philos[i].meals < data->params.max_meals)
+		{
+			pthread_mutex_unlock(&philos[i].meal_mutex);
+			return (false);
+		}
 		pthread_mutex_unlock(&philos[i].meal_mutex);
 		i++;
 	}
-	return (done == data->params.philos_count);
+	return (true);
 }
 
 void	*monitoring(void *arg)
@@ -74,8 +69,11 @@ void	*monitoring(void *arg)
 
 	while (1)
 	{
-		if (philo_died(data) || everyone_ate_enough(data))
+		if (philo_died(data))
 			break ;
+		else if (everyone_ate_enough(data))
+			break ;
+		ms_wait(0.8);
 	}
 	pthread_mutex_lock(&data->state);
 	data->stop = true;
