@@ -19,35 +19,57 @@ MAKEFLAGS		+=	--no-print-directory
 # ╭━━━━━━━━━━━━══════════╕出 ❖ FILE TREE ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 # directories
-D_SRC	=	srcs/
 D_INC	=	inc/
 D_OBJ	=	.obj/
 D_DEP	=	.dep/
+D_SRC	=	srcs/
+D_BON	=	upgrade/
 
 # file lists
-LST_SRC		=	main.c			\
-				time.c			\
-				simu.c			\
-				utils.c			\
-				cleanup.c		\
-				monitoring.c	\
-				philosophers.c
+LST_SRC		=	main.c				\
+				monitoring.c		\
+				philosophers.c		\
+				manage_threads.c
 
-LST_INC		=	philo.h
+LST_BON		=	main_bonus.c		\
+				semaphores.c		\
+				philos_bonus.c		\
+				monitor_bonus.c
+
+LST_REQ		=	time.c				\
+				utils.c				\
+
+LST_INC		=	philo.h				\
+				philo_bonus.h
 
 INC			=	$(addprefix $(D_INC), $(LST_INC))
 
 OBJ			=	$(addprefix $(D_OBJ), $(notdir $(LST_SRC:.c=.o)))
 
+ROBJ		=	$(addprefix $(D_OBJ), $(notdir $(LST_REQ:.c=.o)))
+
+BOBJ		=	$(addprefix $(D_OBJ), $(notdir $(LST_BON:.c=.o)))
+
 DEPS		=	$(addprefix $(D_DEP), $(notdir $(LST_SRC:.c=.d)))
+
+RDEPS		=	$(addprefix $(D_DEP), $(notdir $(LST_REQ:.c=.d)))
+
+BDEPS		=	$(addprefix $(D_DEP), $(notdir $(LST_BON:.c=.d)))
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all:	$(NAME)
 
-$(NAME):	$(OBJ) $(INC) | $(D_OBJ) $(D_DEP) makefile
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+$(NAME):	$(ROBJ) $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) makefile
+	$(CC) $(CFLAGS) $(OBJ) $(ROBJ) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
+
+bonus:	$(D_OBJ).bonus
+
+$(D_OBJ).bonus: $(ROBJ) $(BOBJ) $(INC) | $(D_OBJ)
+	$(CC) $(CFLAGS) $(BOBJ) $(ROBJ) -o $(NAME)
+	@touch $(D_OBJ).bonus
+	@echo "\e[0;35m$(NAME) bonus program created successfully ! 🍪\e[0m"
 
 $(D_OBJ):
 	@mkdir -p $@
@@ -55,14 +77,16 @@ $(D_OBJ):
 $(D_DEP):
 	@mkdir -p $(D_DEP)
 
-vpath %.c $(D_SRC)
+vpath %.c $(D_SRC) $(D_BON)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
 	@echo "\e[36mCompiling $@...	\e[0m"
-	@$(CC) $(CFLAGS) -g3 -I$(D_INC) -c $< -o $@
+	@$(CC) $(CFLAGS) -I$(D_INC) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
+-include $(RDEPS)
+-include $(BDEPS)
 
 clean:
 ifeq ($(SHOW_MSG_CLEAN), true)
@@ -81,7 +105,7 @@ re:
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
 norminette:
-	norminette $(D_SRC) $(D_INC)
+	norminette $(D_SRC) $(D_INC) $(D_BON)
 
 valgrind: supp_file
 	@$(MAKE)

@@ -6,39 +6,23 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 16:33:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/22 20:56:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <string.h>
 
-static void	init_params(t_data *data, char **argv)
+void	print(t_data *data, t_philo *philo, char *msg)
 {
-	int	i;
-	int	convert;
-
-	i = 1;
-	data->params.max_meals = 0;
-	while (i < 6 && argv[i])
-	{
-		convert = ft_atoi(argv[i]);
-		if (i == 1 && (convert <= 0 || convert > 200))
-			exit_err("You can only launch between 1 and 200 philosphers");
-		else if (convert <= 0)
-			exit_err("All parameters must be positive numbers");
-		if (i == 1)
-			data->params.philos_count = convert;
-		else if (i == 2)
-			data->params.time_to_die = convert;
-		else if (i == 3)
-			data->params.time_to_eat = convert;
-		else if (i == 4)
-			data->params.time_to_sleep = convert;
-		else if (i == 5)
-			data->params.max_meals = convert;
-		i++;
-	}
+	if (data->can)
+		return ;
+	pthread_mutex_lock(&data->printer);
+	pthread_mutex_lock(&data->state);
+	if (!data->stop)
+		printf("%ld %d %s\n", timestamp(data->start), philo->id, msg);
+	pthread_mutex_unlock(&data->state);
+	pthread_mutex_unlock(&data->printer);
 }
 
 static void	init_philos(t_data *data)
@@ -71,7 +55,7 @@ static void	init_philos(t_data *data)
 
 static void	init_forks(t_data *data)
 {
-	int	i;
+	unsigned long	i;
 
 	i = 0;
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->params.philos_count);
@@ -88,12 +72,12 @@ static void	init_forks(t_data *data)
 static void	init_data(t_data *data, char **argv)
 {
 	memset(data, 0, sizeof(t_data));
-	init_params(data, argv);
+	init_params(&data->params, argv);
 	if (data->params.philos_count == 1)
 	{
 		printf("0 1 has taken a fork\n");
 		ms_wait(data->params.time_to_die);
-		printf("%d 1 died\n", data->params.time_to_die);
+		printf("%ld 1 died\n", data->params.time_to_die);
 		return ;
 	}
 	if (pthread_mutex_init(&data->printer, NULL))
@@ -114,13 +98,7 @@ int	main(int argc, char **argv)
 	pthread_t	monitor;
 
 	if (argc != 5 && argc != 6)
-	{
-		write(2, "\n\e[1m\e[31mUsage:\t", 17);
-		write(2, argv[0], ft_strlen(argv[0]));
-		write(2, " [nb_philos] [time to die] [time to eat]", 40);
-		write(2, " [time to sleep] (optionnal : max heal nb)\n\n\e[0m", 48);
-		return (1);
-	}
+		return (usage_error(argv));
 	init_data(&data, argv);
 	if (data.params.philos_count == 1)
 		return (0);

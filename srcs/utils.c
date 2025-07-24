@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 09:46:17 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 16:18:20 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/22 21:05:58 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,41 @@
 #include <limits.h>
 #include <stdlib.h>
 
-bool	stopped(t_data *data)
+int	usage_error(char **argv)
 {
-	bool	stopped;
-
-	pthread_mutex_lock(&data->state);
-	stopped = data->stop;
-	pthread_mutex_unlock(&data->state);
-	return (stopped);
+	write(2, "\n\e[1m\e[31mUsage:\t", 17);
+	write(2, argv[0], ft_strlen(argv[0]));
+	write(2, " [nb_philos] [time to die] [time to eat]", 40);
+	write(2, " [time to sleep] (optionnal : max heal nb)\n\n\e[0m", 48);
+	return (1);
 }
 
-void	print(t_data *data, t_philo *philo, long ts, char *msg)
+void	init_params(t_params *params, char **argv)
 {
-	pthread_mutex_lock(&data->printer);
-	pthread_mutex_lock(&data->state);
-	if (!data->stop)
-		printf("%ld %d %s\n", ts, philo->id, msg);
-	pthread_mutex_unlock(&data->state);
-	pthread_mutex_unlock(&data->printer);
+	int	i;
+	int	convert;
+
+	i = 1;
+	params->max_meals = 0;
+	while (i < 6 && argv[i])
+	{
+		convert = ft_atoi(argv[i]);
+		if (convert <= 0 && i != 1)
+			exit_err("\nAll parameters must be positive numbers\n");
+		else if (i == 1 && (convert <= 0 || convert > 200))
+			exit_err("\nYou can only launch between 1 and 200 philosphers\n");
+		if (i == 1)
+			params->philos_count = convert;
+		else if (i == 2)
+			params->time_to_die = convert;
+		else if (i == 3)
+			params->time_to_eat = convert;
+		else if (i == 4)
+			params->time_to_sleep = convert;
+		else if (i == 5 && argv[i])
+			params->max_meals = convert;
+		i++;
+	}
 }
 
 size_t	ft_strlen(const char *str)

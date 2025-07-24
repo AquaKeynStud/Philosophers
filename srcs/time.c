@@ -6,14 +6,14 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 18:21:38 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 16:44:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/22 20:47:25 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <sys/time.h>
 
-long	get_time(void)
+unsigned long	get_time(void)
 {
 	struct timeval	tv;
 
@@ -38,7 +38,7 @@ void	ms_wait(long ms)
 	}
 }
 
-long	timestamp(t_data *data)
+long	timestamp(unsigned long start)
 {
-	return (get_time() - data->start);
+	return (get_time() - start);
 }

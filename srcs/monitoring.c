@@ -6,19 +6,20 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:04 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/08 16:52:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/07/22 20:46:52 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static bool	is_dead(t_data *data, t_philo *philo, int ttk)
+static bool	is_dead(t_data *data, t_philo *philo, unsigned long ttk)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
 	if (get_time() - philo->last_meal >= ttk && !philo->is_eating)
 	{
 		pthread_mutex_unlock(&philo->meal_mutex);
-		print(data, philo, timestamp(data), "died");
+		print(data, philo, "died");
+		data->can = true;
 		return (true);
 	}
 	pthread_mutex_unlock(&philo->meal_mutex);
@@ -27,7 +28,7 @@ static bool	is_dead(t_data *data, t_philo *philo, int ttk)
 
 bool	philo_died(t_data *data)
 {
-	int	i;
+	unsigned long	i;
 
 	i = 0;
 	while (i < data->params.philos_count)
@@ -41,8 +42,8 @@ bool	philo_died(t_data *data)
 
 static bool	everyone_ate_enough(t_data *data)
 {
-	t_philo	*philos;
-	int		i;
+	unsigned long	i;
+	t_philo			*philos;
 
 	philos = data->philos;
 	if (data->params.max_meals <= 0)

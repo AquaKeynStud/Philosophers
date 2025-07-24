@@ -1,0 +1,16 @@
+# Fichiers de compilation
+*.o
+*.d
+.obj/
+.deps/
+
+# Binaires
+philo
+a.out
+
+# Fichiers de sauvegarde / éditeur
+*~
+*.swp
+
+# Configuration d'éditeur
+.vscode/
