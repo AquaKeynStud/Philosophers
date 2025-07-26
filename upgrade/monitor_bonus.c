@@ -52,10 +52,10 @@ static void	*get_death(void *arg)
 		pid = waitpid(-1, &status, 0);
 		if (pid == -1)
 			break;
-		if (!monitor->stop && WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 		{
 			j = 0;
-			monitor->stop = true;
+			sem_wait(monitor->write);
 			while (j < monitor->params->philos_count)
 				kill(monitor->pids[j++], SIGTERM);
 			break;
@@ -75,17 +75,12 @@ static void	*check_quota(void *arg)
 	while (i < monitor->params->philos_count)
 	{
 		sem_wait(monitor->quota);
-		if (monitor->stop)
-			break ;
 		i++;
 	}
-	if (!monitor->stop)
-	{
-		i = 0;
-		monitor->stop = true;
-		while (i < monitor->params->philos_count)
-			kill(monitor->pids[i++], SIGTERM);
-	}
+	i = 0;
+	sem_wait(monitor->write);
+	while (i < monitor->params->philos_count)
+		kill(monitor->pids[i++], SIGTERM);
 	return (NULL);
 }
 

@@ -106,13 +106,3 @@ re:
 
 norminette:
 	norminette $(D_SRC) $(D_INC) $(D_BON)
-
-valgrind: supp_file
-	@$(MAKE)
-	valgrind								\
-		--leak-check=full					\
-		--show-leak-kinds=all				\
-		--track-origins=yes 				\
-		--track-fds=yes						\
-		./$(NAME)
-	@clear

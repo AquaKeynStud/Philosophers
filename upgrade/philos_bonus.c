@@ -67,12 +67,12 @@ int	philo_routine(t_philo_bonus *philo)
 		print_action(philo, "has taken a fork");
 		sem_wait(philo->monitor->forks);
 		print_action(philo, "has taken a fork");
-		print_action(philo, "is eating");
-		ms_wait(philo->monitor->params->time_to_eat);
 		sem_wait(philo->meal_lock);
 		philo->last_meal = get_time();
 		philo->meals++;
 		sem_post(philo->meal_lock);
+		print_action(philo, "is eating");
+		ms_wait(philo->monitor->params->time_to_eat);
 		if (philo->monitor->params->max_meals != -1
 				&& philo->meals == philo->monitor->params->max_meals)
 			sem_post(philo->monitor->quota);

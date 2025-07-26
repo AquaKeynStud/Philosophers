@@ -55,7 +55,6 @@ static void	init_monitor(t_monitor *monitor, char **argv)
 
 	i = 0;
 	memset(monitor, 0, sizeof(t_monitor));
-	monitor->stop = false;
 	monitor->start = get_time();
 	monitor->params = malloc(sizeof(t_params));
 	if (!monitor->params)
