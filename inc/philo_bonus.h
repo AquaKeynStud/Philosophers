@@ -30,7 +30,6 @@ typedef struct s_philo_bonus
 {
 	int				id;
 	long			meals;
-	sem_t			*death;
 	t_monitor		*monitor;
 	unsigned long	last_meal;
 	sem_t			*meal_lock;

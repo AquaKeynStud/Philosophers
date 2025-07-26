@@ -20,10 +20,6 @@ void	clean_philos(t_monitor *monitor)
 	i = 0;
 	while (i < monitor->params->philos_count)
 	{
-		sem_close(monitor->philos[i].death);
-		name = name_sem("/philo_dead_", monitor->philos[i].id);
-		sem_unlink(name);
-		free(name);
 		sem_close(monitor->philos[i].meal_lock);
 		name = name_sem("/philo_meal_", monitor->philos[i].id);
 		sem_unlink(name);

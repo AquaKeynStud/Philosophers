@@ -22,28 +22,18 @@ void	print_action(t_philo_bonus *philo, const char *msg)
 
 static bool	init_philo(t_philo_bonus *philo, t_monitor *monitor, int i)
 {
-	char	*dead;
 	char	*meal;
 
 	philo->meals = 0;
 	philo->id = i + 1;
 	philo->monitor = monitor;
 	philo->last_meal = monitor->start;
-	dead = name_sem("/philo_dead_", philo->id);
-	if (!init_sem(&philo->death, 0, dead))
-	{
-		free(dead);
-		return (false);
-	}
 	meal = name_sem("/philo_meal_", philo->id);
 	if (!init_sem(&philo->meal_lock, 1, meal))
 	{
-		clean_sem(philo->death, dead);
-		free(dead);
 		free(meal);
 		return (false);
 	}
-	free(dead);
 	free(meal);
 	return (true);
 }
