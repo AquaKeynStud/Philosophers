@@ -54,6 +54,7 @@ static void	init_monitor(t_monitor *monitor, char **argv)
 	monitor->pids = malloc(sizeof(pid_t) * nb_philos);
 	monitor->philos = malloc(sizeof(t_philo_bonus) * nb_philos);
 	if (!monitor->pids || !monitor->philos
+		|| !init_sem(&monitor->stop, 0, "/philo_stop")
 		|| !init_sem(&monitor->quota, 0, "/philo_quota")
 		|| !init_sem(&monitor->write, 1, "/philo_write")
 		|| !init_sem(&monitor->forks, nb_philos, "/philo_forks"))

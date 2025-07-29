@@ -37,6 +37,10 @@ typedef struct s_philo_bonus
 
 typedef struct s_monitor
 {
+	bool					lock;
+	pthread_mutex_t			*locker;
+
+	sem_t					*stop;
 	pid_t					*pids;
 	unsigned long			start;
 	sem_t					*forks;

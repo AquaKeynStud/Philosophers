@@ -2,11 +2,15 @@
 *.o
 *.d
 .obj/
+.dep/
+.objs/
 .deps/
+.build/
 
 # Binaires
-philo
 a.out
+philo
+philo_bonus
 
 # Fichiers de sauvegarde / éditeur
 *~

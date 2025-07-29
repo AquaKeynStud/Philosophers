@@ -1,6 +1,8 @@
 .PHONY : all clean fclean re norminette valgrind
 
-NAME = philo
+NAME := philo
+
+BONUS := philo_bonus
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ BASICS VARIABLES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
@@ -66,8 +68,8 @@ $(NAME):	$(ROBJ) $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) makefile
 
 bonus:	$(D_OBJ).bonus
 
-$(D_OBJ).bonus: $(ROBJ) $(BOBJ) $(INC) | $(D_OBJ)
-	$(CC) $(CFLAGS) $(BOBJ) $(ROBJ) -o $(NAME)
+$(D_OBJ).bonus: $(ROBJ) $(BOBJ) $(INC) | $(D_OBJ) makefile
+	$(CC) $(CFLAGS) $(BOBJ) $(ROBJ) -o $(BONUS)
 	@touch $(D_OBJ).bonus
 	@echo "\e[0;35m$(NAME) bonus program created successfully ! 🍪\e[0m"
 
@@ -97,6 +99,7 @@ endif
 fclean:
 	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
 	@$(RM) $(NAME)
+	@$(RM) $(BONUS)
 	@echo "\e[0;34m$(NAME) executable deleted ! 🧼\e[0m"
 
 re:
@@ -105,4 +108,4 @@ re:
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
 norminette:
-	norminette $(D_SRC) $(D_INC) $(D_BON)
+	norminette $(D_INC) $(D_SRC) $(D_BON)
