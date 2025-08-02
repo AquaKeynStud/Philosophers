@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/22 20:56:34 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/02 14:42:28 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 void	print(t_data *data, t_philo *philo, char *msg)
 {
-	if (data->can)
-		return ;
 	pthread_mutex_lock(&data->printer);
 	pthread_mutex_lock(&data->state);
 	if (!data->stop)
@@ -40,15 +38,14 @@ static void	init_philos(t_data *data)
 	}
 	while (i < nb_philo)
 	{
-		data->philos[i].id = i + 1;
 		data->philos[i].meals = 0;
-		data->philos[i].is_eating = false;
+		data->philos[i].id = i + 1;
 		data->philos[i].monitoring = data;
 		data->philos[i].last_meal = data->start;
 		data->philos[i].left_fork = &data->forks[i];
 		data->philos[i].right_fork = &data->forks[(i + 1) % nb_philo];
 		if (pthread_mutex_init(&data->philos[i].meal_mutex, NULL))
-			exit_err("Init mutex meal failed");
+			exit_err("Meal mutex init failed");
 		i++;
 	}
 }
@@ -72,6 +69,8 @@ static void	init_forks(t_data *data)
 static void	init_data(t_data *data, char **argv)
 {
 	memset(data, 0, sizeof(t_data));
+	data->quota = 0;
+	data->stop = false;
 	init_params(&data->params, argv);
 	if (data->params.philos_count == 1)
 	{
@@ -87,7 +86,10 @@ static void	init_data(t_data *data, char **argv)
 		pthread_mutex_destroy(&data->printer);
 		exit_err("State mutex init failed");
 	}
-	data->start = get_time() + 50;
+	if (3 * data->params.philos_count < 50)
+		data->start = get_time() + 50;
+	else
+		data->start = get_time() + (3 * data->params.philos_count);
 	init_forks(data);
 	init_philos(data);
 }

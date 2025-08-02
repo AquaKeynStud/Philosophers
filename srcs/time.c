@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 18:21:38 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/22 20:47:25 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/02 14:54:50 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,26 @@ unsigned long	get_time(void)
 
 void	ms_wait(long ms)
 {
-	long	start;
-	long	elapsed;
+	unsigned long	start;
+	unsigned long	elapsed;
+	long			to_wait;
 
+	to_wait = ms;
 	start = get_time();
-	if (ms > 2)
-		usleep((ms - 2) * 1000);
+	if (to_wait > 20)
+		usleep((to_wait - 10) * 1000);
 	while (1)
 	{
 		elapsed = get_time() - start;
-		if (elapsed >= ms)
-			break ;
-		usleep(50);
+		if (elapsed >= (unsigned long)ms)
+			break;
+		if ((ms - elapsed) > 10)
+			usleep(1000);
+		else
+			usleep(100);
 	}
 }
+
 
 long	timestamp(unsigned long start)
 {

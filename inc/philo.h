@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/24 21:04:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/02 14:49:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct s_philo
 	int				id;
 	long			meals;
 	pthread_t		thread;
-	bool			is_eating;
 	unsigned long	last_meal;
 	pthread_mutex_t	meal_mutex;
 	pthread_mutex_t	*left_fork;
@@ -45,9 +44,9 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	bool			can;
 	bool			stop;
 	unsigned long	start;
+	unsigned long	quota;
 	pthread_mutex_t	state;
 	struct s_params	params;
 	pthread_mutex_t	*forks;
@@ -59,6 +58,7 @@ typedef struct s_data
 unsigned long	get_time(void);
 void			ms_wait(long ms);
 void			*routine(void *arg);
+bool			stopped(t_data *data);
 void			cleanup(t_data *data);
 void			*monitoring(void *arg);
 void			exit_err(char *message);
@@ -71,5 +71,7 @@ void			wait_all(t_data *data, pthread_t monitor);
 void			init_params(t_params *params, char **argv);
 void			print(t_data *data, t_philo *philo, char *msg);
 int				start_monitor(t_data *data, pthread_t *monitor_thread);
+
+void	ms_waitb(long ms);
 
 #endif
