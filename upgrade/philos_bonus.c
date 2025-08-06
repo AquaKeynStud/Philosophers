@@ -76,8 +76,9 @@ void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 	}
 	else
 		print_action(philo, "is eating");
-	sem_post(philo->meal_lock);
 	ms_wait(monitor->params->time_to_eat);
+	philo->last_meal = get_time();
+	sem_post(philo->meal_lock);
 }
 
 int	philo_routine(t_philo_bonus *philo)
