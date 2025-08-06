@@ -45,12 +45,12 @@ static void	init_monitor(t_monitor *monitor, char **argv)
 
 	i = 0;
 	memset(monitor, 0, sizeof(t_monitor));
-	monitor->start = get_time();
 	monitor->params = malloc(sizeof(t_params));
 	if (!monitor->params)
 		exit_err("Failed to get program arguments\n");
 	init_params(monitor->params, argv);
 	nb_philos = monitor->params->philos_count;
+	monitor->start = get_time() + nb_philos;
 	monitor->pids = malloc(sizeof(pid_t) * nb_philos);
 	monitor->philos = malloc(sizeof(t_philo_bonus) * nb_philos);
 	if (!monitor->pids || !monitor->philos
@@ -58,13 +58,22 @@ static void	init_monitor(t_monitor *monitor, char **argv)
 		|| !init_sem(&monitor->quota, 0, "/philo_quota")
 		|| !init_sem(&monitor->write, 1, "/philo_write")
 		|| !init_sem(&monitor->forks, nb_philos, "/philo_forks"))
-		clean_exit(monitor);
+		clean_exit(monitor, 1);
 	while (i < nb_philos)
 	{
 		if (!init_philo(&monitor->philos[i], monitor, i))
-			clean_exit(monitor);
+			clean_exit(monitor, 1);
 		i++;
 	}
+}
+
+static int	handle_single_philo_bonus(t_monitor *monitor)
+{
+	printf("0 1 has taken a fork\n");
+	ms_wait(monitor->params->time_to_die);
+	printf("%ld 1 died\n", monitor->params->time_to_die);
+	clean_exit(monitor, 0);
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -77,11 +86,13 @@ int	main(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 		return (usage_error(argv));
 	init_monitor(&monitor, argv);
+	if (monitor.params->philos_count == 1)
+		return (handle_single_philo_bonus(&monitor));
 	while (i < monitor.params->philos_count)
 	{
 		pid = fork();
 		if (pid < 0)
-			clean_exit(&monitor);
+			clean_exit(&monitor, 1);
 		else if (pid == 0)
 			exit(philo_routine(&monitor.philos[i]));
 		monitor.pids[i] = pid;

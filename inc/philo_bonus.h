@@ -37,9 +37,6 @@ typedef struct s_philo_bonus
 
 typedef struct s_monitor
 {
-	bool					lock;
-	pthread_mutex_t			*locker;
-
 	sem_t					*stop;
 	pid_t					*pids;
 	unsigned long			start;
@@ -51,12 +48,12 @@ typedef struct s_monitor
 }			t_monitor;
 
 /* -- Functions -- */
-void	clean_exit(t_monitor *monitor);
 void	clean_philos(t_monitor *monitor);
 char	*name_sem(char *first, int philo);
 int		philo_routine(t_philo_bonus *philo);
 void	monitoring_bonus(t_monitor *monitor);
 void	clean_sem(sem_t *sem, const char *name);
+void	clean_exit(t_monitor *monitor, int code);
 bool	init_sem(sem_t **sem, int n, const char *unlink);
 void	print_action(t_philo_bonus *philo, const char *msg);
 

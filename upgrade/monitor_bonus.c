@@ -14,7 +14,7 @@
 #include <sys/wait.h>
 #include "philo_bonus.h"
 
-void	clean_exit(t_monitor *monitor)
+void	clean_exit(t_monitor *monitor, int code)
 {
 	if (monitor->philos)
 		clean_philos(monitor);
@@ -36,7 +36,7 @@ void	clean_exit(t_monitor *monitor)
 		clean_sem(monitor->quota, "/philo_quota");
 	if (monitor->stop)
 		clean_sem(monitor->stop, "/philo_stop");
-	exit(1);
+	exit(code);
 }
 
 static void	*get_death(void *arg)
@@ -54,7 +54,7 @@ static void	*get_death(void *arg)
 		while (i < monitor->params->philos_count)
 		{
 			sem_post(monitor->quota);
-			kill(monitor->pids[i++], SIGTERM);
+			i++;
 		}
 	}
 	return (NULL);
@@ -67,17 +67,14 @@ static void	*check_quota(void *arg)
 
 	i = 0;
 	monitor = (t_monitor *)arg;
-	while (i < monitor->params->philos_count)
+	while (i < monitor->params->philos_count - 1)
 	{
 		sem_wait(monitor->quota);
+		sem_post(monitor->write);
 		i++;
-		if (i < monitor->params->philos_count - 1)
-			sem_post(monitor->write);
 	}
-	i = 0;
+	sem_wait(monitor->quota);
 	sem_post(monitor->stop);
-	while (i < monitor->params->philos_count)
-		kill(monitor->pids[i++], SIGTERM);
 	return (NULL);
 }
 
@@ -86,9 +83,11 @@ void	monitoring_bonus(t_monitor *monitor)
 	pthread_t	death_thread;
 	pthread_t	quota_thread;
 
+	while (get_time() < monitor->start)
+		usleep(100);
 	pthread_create(&death_thread, NULL, get_death, monitor);
 	pthread_create(&quota_thread, NULL, check_quota, monitor);
 	pthread_join(death_thread, NULL);
 	pthread_join(quota_thread, NULL);
-	clean_exit(monitor);
+	clean_exit(monitor, 0);
 }

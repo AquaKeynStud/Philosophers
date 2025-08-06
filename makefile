@@ -81,9 +81,9 @@ $(D_DEP):
 
 vpath %.c $(D_SRC) $(D_BON)
 
-$(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP)
+$(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP) makefile
 	@echo "\e[36mCompiling $@...	\e[0m"
-	@$(CC) $(CFLAGS) -I$(D_INC) -c $< -o $@
+	@$(CC) -g3 $(CFLAGS) -I$(D_INC) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)

@@ -43,12 +43,12 @@ static void	*detect_death(void *arg)
 		if (get_time() - philo->last_meal > monitor->params->time_to_die)
 		{
 			sem_wait(philo->monitor->write);
-			printf("%lu %d %s\n", timestamp(monitor->start), philo->id, "died");
+			printf("%lu %d died\n", timestamp(monitor->start), philo->id);
 			sem_post(philo->meal_lock);
-			exit(1);
+			clean_exit(monitor, 1);
 		}
 		sem_post(philo->meal_lock);
-		ms_wait(10);
+		ms_wait(1);
 	}
 	return (NULL);
 }
@@ -59,8 +59,8 @@ static void	*stop_detector(void *arg)
 
 	philo = (t_philo_bonus *)arg;
 	sem_wait(philo->monitor->stop);
-	sem_wait(philo->monitor->write);
-	exit(0);
+	clean_exit(philo->monitor, 0);
+	return (NULL);
 }
 
 void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
@@ -71,8 +71,8 @@ void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 	if (philo->meals == monitor->params->max_meals)
 	{
 		sem_post(monitor->quota);
-		sem_post(monitor->write);
-		printf("%lu %d %s\n", timestamp(monitor->start), id, "is eating");
+		sem_wait(monitor->write);
+		printf("%lu %d is eating\n", timestamp(monitor->start), id);
 	}
 	else
 		print_action(philo, "is eating");
@@ -85,6 +85,8 @@ int	philo_routine(t_philo_bonus *philo)
 	pthread_t	death_thread;
 	pthread_t	quota_thread;
 
+	while (get_time() < philo->monitor->start)
+		usleep(100);
 	pthread_create(&death_thread, NULL, detect_death, philo);
 	pthread_create(&quota_thread, NULL, stop_detector, philo);
 	pthread_detach(death_thread);
