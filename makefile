@@ -109,3 +109,9 @@ re:
 
 norminette:
 	norminette $(D_INC) $(D_SRC) $(D_BON)
+
+valgrind: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(ARGS)
+
+helgrind: $(NAME)
+	valgrind --tool=helgrind ./$(NAME) $(ARGS)

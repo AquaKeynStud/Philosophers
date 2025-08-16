@@ -27,8 +27,7 @@ static bool	is_dead(t_data *data, t_philo *philo)
 	pthread_mutex_lock(&philo->meal_mutex);
 	if (get_time() - philo->last_meal >= data->params.time_to_die)
 	{
-		pthread_mutex_lock(&data->printer);
-		printf("%ld %d died\n", timestamp(data->start), philo->id);
+		print(data, philo, "died");
 		pthread_mutex_unlock(&philo->meal_mutex);
 		pthread_mutex_lock(&data->state);
 		data->stop = true;
@@ -93,6 +92,5 @@ void	*monitoring(void *arg)
 	pthread_create(&thread_quota, NULL, check_quota, data);
 	pthread_join(thread_death, NULL);
 	pthread_join(thread_quota, NULL);
-	pthread_mutex_unlock(&data->printer);
 	return (NULL);
 }

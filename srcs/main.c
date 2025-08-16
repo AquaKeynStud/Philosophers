@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/02 14:42:28 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/16 19:20:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 void	print(t_data *data, t_philo *philo, char *msg)
 {
 	pthread_mutex_lock(&data->printer);
-	pthread_mutex_lock(&data->state);
-	if (!data->stop)
+	if (!stopped(data))
 		printf("%ld %d %s\n", timestamp(data->start), philo->id, msg);
-	pthread_mutex_unlock(&data->state);
 	pthread_mutex_unlock(&data->printer);
 }
 
