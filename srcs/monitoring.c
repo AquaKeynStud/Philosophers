@@ -47,12 +47,12 @@ static void	*philo_died(void *arg)
 	while (!stopped(data))
 	{
 		i = 0;
-		while (i < data->params.philos_count && !stopped(data))
+		while (i < data->params.nb_philo && !stopped(data))
 		{
 			if (is_dead(data, &data->philos[i++]))
 				return (NULL);
 		}
-		ms_wait(data->params.time_to_die / 10 - data->params.time_to_die % 10);
+		ms_wait(50);
 	}
 	return (NULL);
 }
@@ -67,7 +67,7 @@ static void	*check_quota(void *arg)
 	while (!stopped(data))
 	{
 		pthread_mutex_lock(&data->state);
-		if (data->quota == data->params.philos_count)
+		if (data->quota == data->params.nb_philo)
 		{
 			data->stop = true;
 			pthread_mutex_unlock(&data->state);

@@ -53,12 +53,14 @@ static bool	take_forks(t_data *data, t_philo *philo)
 static bool	is_last_for_quota(t_data *data, t_philo *philo)
 {
 	bool	last;
+	t_data	*monitor;
 
-	if (philo->meals == philo->monitoring->params.max_meals)
+	monitor = philo->monitoring;
+	if (philo->meals == monitor->params.max_meals)
 	{
 		pthread_mutex_lock(&data->state);
-		philo->monitoring->quota++;
-		last = philo->monitoring->quota == philo->monitoring->params.philos_count;
+		monitor->quota++;
+		last = monitor->quota == monitor->params.nb_philo;
 		pthread_mutex_unlock(&data->state);
 		if (last)
 		{

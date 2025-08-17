@@ -48,7 +48,6 @@ typedef struct s_monitor
 }			t_monitor;
 
 /* -- Functions -- */
-void	clean_philos(t_monitor *monitor);
 char	*name_sem(char *first, int philo);
 int		philo_routine(t_philo_bonus *philo);
 void	monitoring_bonus(t_monitor *monitor);

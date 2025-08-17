@@ -14,6 +14,25 @@
 #include <sys/wait.h>
 #include "philo_bonus.h"
 
+static void	clean_philos(t_monitor *monitor)
+{
+	unsigned long	i;
+	char			*name;
+
+	i = 0;
+	while (i < monitor->params->nb_philo)
+	{
+		if (!monitor->philos || !monitor->philos[i].last_meal)
+			break ;
+		name = name_sem("/philo_meal_", monitor->philos[i].id);
+		clean_sem(monitor->philos[i].meal_lock, name);
+		free(name);
+		i++;
+	}
+	free(monitor->philos);
+	monitor->philos = NULL;
+}
+
 void	clean_exit(t_monitor *monitor, int code)
 {
 	if (monitor->philos)
@@ -51,7 +70,7 @@ static void	*get_death(void *arg)
 	{
 		i = 0;
 		sem_post(monitor->stop);
-		while (i < monitor->params->philos_count)
+		while (i < monitor->params->nb_philo)
 		{
 			sem_post(monitor->quota);
 			i++;
@@ -67,7 +86,7 @@ static void	*check_quota(void *arg)
 
 	i = 0;
 	monitor = (t_monitor *)arg;
-	while (i < monitor->params->philos_count - 1)
+	while (i < monitor->params->nb_philo - 1)
 	{
 		sem_wait(monitor->quota);
 		sem_post(monitor->write);
@@ -80,14 +99,18 @@ static void	*check_quota(void *arg)
 
 void	monitoring_bonus(t_monitor *monitor)
 {
-	pthread_t	death_thread;
-	pthread_t	quota_thread;
+	unsigned long	i;
+	pthread_t		death_thread;
+	pthread_t		quota_thread;
 
+	i = 0;
 	while (get_time() < monitor->start)
 		usleep(100);
 	pthread_create(&death_thread, NULL, get_death, monitor);
 	pthread_create(&quota_thread, NULL, check_quota, monitor);
 	pthread_join(death_thread, NULL);
 	pthread_join(quota_thread, NULL);
+	while (i < monitor->params->nb_philo)
+		waitpid(monitor->pids[i++], NULL, 0);
 	clean_exit(monitor, 0);
 }

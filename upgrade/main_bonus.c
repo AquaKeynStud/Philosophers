@@ -49,7 +49,7 @@ static void	init_monitor(t_monitor *monitor, char **argv)
 	if (!monitor->params)
 		exit_err("Failed to get program arguments\n");
 	init_params(monitor->params, argv);
-	nb_philos = monitor->params->philos_count;
+	nb_philos = monitor->params->nb_philo;
 	monitor->start = get_time() + nb_philos;
 	monitor->pids = malloc(sizeof(pid_t) * nb_philos);
 	monitor->philos = malloc(sizeof(t_philo_bonus) * nb_philos);
@@ -86,9 +86,9 @@ int	main(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 		return (usage_error(argv));
 	init_monitor(&monitor, argv);
-	if (monitor.params->philos_count == 1)
+	if (monitor.params->nb_philo == 1)
 		return (handle_single_philo_bonus(&monitor));
-	while (i < monitor.params->philos_count)
+	while (i < monitor.params->nb_philo)
 	{
 		pid = fork();
 		if (pid < 0)

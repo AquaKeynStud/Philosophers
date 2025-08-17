@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 09:46:17 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/22 21:05:58 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	init_params(t_params *params, char **argv)
 		else if (i == 1 && (convert <= 0 || convert > 200))
 			exit_err("\nYou can only launch between 1 and 200 philosphers\n");
 		if (i == 1)
-			params->philos_count = convert;
+			params->nb_philo = convert;
 		else if (i == 2)
 			params->time_to_die = convert;
 		else if (i == 3)

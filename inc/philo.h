@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/02 14:49:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_params
 	long			max_meals;
 	unsigned long	time_to_die;
 	unsigned long	time_to_eat;
-	unsigned long	philos_count;
+	unsigned long	nb_philo;
 	unsigned long	time_to_sleep;
 }				t_params;
 
@@ -71,7 +71,5 @@ void			wait_all(t_data *data, pthread_t monitor);
 void			init_params(t_params *params, char **argv);
 void			print(t_data *data, t_philo *philo, char *msg);
 int				start_monitor(t_data *data, pthread_t *monitor_thread);
-
-void	ms_waitb(long ms);
 
 #endif

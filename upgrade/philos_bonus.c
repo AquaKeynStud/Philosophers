@@ -12,24 +12,6 @@
 
 #include "philo_bonus.h"
 
-void	clean_philos(t_monitor *monitor)
-{
-	unsigned long	i;
-	char			*name;
-
-	i = 0;
-	while (i < monitor->params->philos_count)
-	{
-		sem_close(monitor->philos[i].meal_lock);
-		name = name_sem("/philo_meal_", monitor->philos[i].id);
-		sem_unlink(name);
-		free(name);
-		i++;
-	}
-	free(monitor->philos);
-	monitor->philos = NULL;
-}
-
 static void	*detect_death(void *arg)
 {
 	t_philo_bonus	*philo;
@@ -59,7 +41,7 @@ static void	*stop_detector(void *arg)
 
 	philo = (t_philo_bonus *)arg;
 	sem_wait(philo->monitor->stop);
-	clean_exit(philo->monitor, 0);
+	clean_exit(philo->monitor, 1);
 	return (NULL);
 }
 

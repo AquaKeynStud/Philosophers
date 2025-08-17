@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:07:30 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/30 00:54:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/17 15:14:09 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ char	*name_sem(char *first, int philo)
 	char	*result;
 	char	*philo_char;
 
+	if (!first || !*first)
+		return (NULL);
 	philo_char = ft_itoa(philo);
 	if (!philo_char)
 		return (NULL);

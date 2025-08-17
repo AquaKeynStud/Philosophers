@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/16 19:20:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	init_philos(t_data *data)
 	int	nb_philo;
 
 	i = 0;
-	nb_philo = data->params.philos_count;
+	nb_philo = data->params.nb_philo;
 	data->philos = malloc(sizeof(t_philo) * nb_philo);
 	if (!data->philos)
 	{
@@ -53,10 +53,10 @@ static void	init_forks(t_data *data)
 	unsigned long	i;
 
 	i = 0;
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->params.philos_count);
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->params.nb_philo);
 	if (!data->forks)
 		exit_err("Failed to allocate memory with malloc for the forks");
-	while (i < data->params.philos_count)
+	while (i < data->params.nb_philo)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL))
 			exit_err("Mutex init failed");
@@ -70,7 +70,7 @@ static void	init_data(t_data *data, char **argv)
 	data->quota = 0;
 	data->stop = false;
 	init_params(&data->params, argv);
-	if (data->params.philos_count == 1)
+	if (data->params.nb_philo == 1)
 	{
 		printf("0 1 has taken a fork\n");
 		ms_wait(data->params.time_to_die);
@@ -84,10 +84,10 @@ static void	init_data(t_data *data, char **argv)
 		pthread_mutex_destroy(&data->printer);
 		exit_err("State mutex init failed");
 	}
-	if (3 * data->params.philos_count < 50)
+	if (3 * data->params.nb_philo < 50)
 		data->start = get_time() + 50;
 	else
-		data->start = get_time() + (3 * data->params.philos_count);
+		data->start = get_time() + (3 * data->params.nb_philo);
 	init_forks(data);
 	init_philos(data);
 }
@@ -100,7 +100,7 @@ int	main(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 		return (usage_error(argv));
 	init_data(&data, argv);
-	if (data.params.philos_count == 1)
+	if (data.params.nb_philo == 1)
 		return (0);
 	if (start_philosophers(&data))
 		exit_err("Failed to create philosopher threads");

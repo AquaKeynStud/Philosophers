@@ -42,14 +42,13 @@ void	ms_wait(long ms)
 	{
 		elapsed = get_time() - start;
 		if (elapsed >= (unsigned long)ms)
-			break;
+			break ;
 		if ((ms - elapsed) > 10)
 			usleep(1000);
 		else
 			usleep(100);
 	}
 }
-
 
 long	timestamp(unsigned long start)
 {
