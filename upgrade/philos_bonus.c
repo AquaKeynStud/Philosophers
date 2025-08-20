@@ -45,7 +45,7 @@ static void	*stop_detector(void *arg)
 	return (NULL);
 }
 
-void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
+static void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 {
 	sem_wait(philo->meal_lock);
 	philo->last_meal = get_time();
