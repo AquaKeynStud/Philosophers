@@ -22,7 +22,7 @@ static void	clean_philos(t_monitor *monitor)
 	i = 0;
 	while (i < monitor->params->nb_philo)
 	{
-		if (!monitor->philos || !monitor->philos[i].last_meal)
+		if (!monitor->philos || !monitor->philos[i].meal_lock)
 			break ;
 		name = name_sem("/philo_meal_", monitor->philos[i].id);
 		clean_sem(monitor->philos[i].meal_lock, name);
@@ -38,10 +38,7 @@ void	clean_exit(t_monitor *monitor, int code)
 	if (monitor->philos)
 		clean_philos(monitor);
 	if (monitor->params)
-	{
 		free(monitor->params);
-		monitor->params = NULL;
-	}
 	if (monitor->pids)
 	{
 		free(monitor->pids);
