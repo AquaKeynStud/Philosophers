@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:04 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/22 20:46:52 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/03 21:53:44 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	*philo_died(void *arg)
 			if (is_dead(data, &data->philos[i++]))
 				return (NULL);
 		}
-		ms_wait(50);
+		ms_wait(1);
 	}
 	return (NULL);
 }
@@ -74,7 +74,7 @@ static void	*check_quota(void *arg)
 			return (NULL);
 		}
 		pthread_mutex_unlock(&data->state);
-		ms_wait(50);
+		ms_wait(1);
 	}
 	return (NULL);
 }
