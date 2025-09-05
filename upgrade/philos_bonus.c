@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:37:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:34:13 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:45:17 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static void	*detect_death(void *arg)
 		sem_wait(philo->meal_lock);
 		if (get_time() - philo->last_meal >= monitor->params->time_to_die)
 		{
-			philo->active = false;
 			sem_wait(philo->monitor->write);
 			printf("%lu %d died\n", timestamp(monitor->start), philo->id);
 			sem_post(philo->meal_lock);
+			philo->active = false;
 			clean_exit(monitor, 1);
 		}
 		sem_post(philo->meal_lock);

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:22 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:33:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:48:39 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ int	main(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 		return (usage_error(argv));
 	init_monitor(&monitor, argv);
+	monitor.active = true;
 	if (monitor.params->nb_philo == 1)
 		return (handle_single_philo_bonus(&monitor));
 	while (i < monitor.params->nb_philo)

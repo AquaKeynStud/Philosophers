@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:13:06 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:15:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:53:43 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ static void	*get_death(void *arg)
 	if (pid != -1)
 	{
 		i = 0;
-		sem_post(monitor->stop);
+		if (!monitor->active)
+			return (NULL);
+		monitor->active = false;
 		while (i < monitor->params->nb_philo)
 		{
 			sem_post(monitor->quota);
@@ -84,6 +86,8 @@ static void	*check_quota(void *arg)
 	while (i < monitor->params->nb_philo - 1)
 	{
 		sem_wait(monitor->quota);
+		if (!monitor->active)
+			return (NULL);
 		sem_post(monitor->write);
 		i++;
 	}
