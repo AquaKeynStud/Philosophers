@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:22 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/24 21:14:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:33:36 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 void	print_action(t_philo_bonus *philo, const char *msg)
 {
+	if (!philo->active)
+		return ;
 	sem_wait(philo->monitor->write);
 	printf("%lu %d %s\n", timestamp(philo->monitor->start), philo->id, msg);
 	sem_post(philo->monitor->write);
@@ -26,6 +28,7 @@ static bool	init_philo(t_philo_bonus *philo, t_monitor *monitor, int i)
 
 	philo->meals = 0;
 	philo->id = i + 1;
+	philo->active = true;
 	philo->monitor = monitor;
 	philo->last_meal = monitor->start;
 	meal = name_sem("/philo_meal_", philo->id);

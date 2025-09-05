@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:40 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/24 21:04:45 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:18:08 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_philo_bonus
 {
 	int				id;
 	long			meals;
+	bool			active;
 	t_monitor		*monitor;
 	unsigned long	last_meal;
 	sem_t			*meal_lock;

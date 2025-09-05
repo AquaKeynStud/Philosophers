@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:37:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/07/24 21:13:33 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/05 18:34:13 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@ static void	*detect_death(void *arg)
 	monitor = philo->monitor;
 	while (1)
 	{
+		if (!philo->active)
+			return (NULL);
 		sem_wait(philo->meal_lock);
-		if (get_time() - philo->last_meal > monitor->params->time_to_die)
+		if (get_time() - philo->last_meal >= monitor->params->time_to_die)
 		{
+			philo->active = false;
 			sem_wait(philo->monitor->write);
 			printf("%lu %d died\n", timestamp(monitor->start), philo->id);
 			sem_post(philo->meal_lock);
@@ -41,12 +44,17 @@ static void	*stop_detector(void *arg)
 
 	philo = (t_philo_bonus *)arg;
 	sem_wait(philo->monitor->stop);
+	if (!philo->active)
+		return (NULL);
+	philo->active = false;
 	clean_exit(philo->monitor, 1);
 	return (NULL);
 }
 
 static void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 {
+	if (!philo->active)
+		return ;
 	sem_wait(philo->meal_lock);
 	philo->last_meal = get_time();
 	philo->meals++;

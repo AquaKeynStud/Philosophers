@@ -1,4 +1,4 @@
-.PHONY : all clean fclean re norminette valgrind
+.PHONY : all bonus clean fclean re reb rm rmb norminette rmv valgrind helgrind
 
 NAME := philo
 
@@ -58,19 +58,22 @@ RDEPS		=	$(addprefix $(D_DEP), $(notdir $(LST_REQ:.c=.d)))
 
 BDEPS		=	$(addprefix $(D_DEP), $(notdir $(LST_BON:.c=.d)))
 
+VALARGS		:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all:	$(NAME)
+bonus:	$(BONUS)
+both:
+	@$(MAKE) all
+	@$(MAKE) bonus
 
 $(NAME):	$(ROBJ) $(OBJ) $(INC) | $(D_OBJ) $(D_DEP) makefile
 	$(CC) $(CFLAGS) $(OBJ) $(ROBJ) -o $(NAME)
 	@echo "\e[0;32m$(NAME) program created successfully ! 🧬\e[0m"
 
-bonus:	$(D_OBJ).bonus
-
-$(D_OBJ).bonus: $(ROBJ) $(BOBJ) $(INC) | $(D_OBJ) makefile
+$(BONUS):	$(ROBJ) $(BOBJ) $(INC) | $(D_OBJ) $(D_DEP) makefile
 	$(CC) $(CFLAGS) $(BOBJ) $(ROBJ) -o $(BONUS)
-	@touch $(D_OBJ).bonus
 	@echo "\e[0;35m$(NAME) bonus program created successfully ! 🍪\e[0m"
 
 $(D_OBJ):
@@ -107,11 +110,31 @@ re:
 	@$(MAKE) all
 	@echo "\e[0;32m$(NAME) program recreated successfully ! 🫡\e[0m"
 
+reb:
+	@$(MAKE) fclean
+	@$(MAKE) bonus
+	@echo "\e[0;32m$(BONUS) program recreated successfully ! 🫡\e[0m"
+
+rm:
+	@$(RM) $(OBJ) $(DEPS) $(NAME)
+	@echo "\e[33mDelete of all instances relative to $(NAME) only 🎇\e[0m"
+
+rmb:
+	@$(RM) $(BOBJ) $(BDEPS) $(BONUS)
+	@echo "\e[33mDelete of all instances relative to $(BONUS) only 🎆\e[0m"
+
 norminette:
 	norminette $(D_INC) $(D_SRC) $(D_BON)
 
-valgrind: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(ARGS)
+rmv:
+	@$(RM) $(wildcard valgrind-*)
 
-helgrind: $(NAME)
-	valgrind --tool=helgrind ./$(NAME) $(ARGS)
+valgrind:
+	@$(MAKE) rmv
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=valgrind-%p.log ./$(VALARGS)
+
+helgrind:
+	valgrind --tool=helgrind ./$(VALARGS)
+
+%:
+	@:
