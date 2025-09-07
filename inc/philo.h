@@ -30,6 +30,12 @@ typedef struct s_params
 	unsigned long	time_to_sleep;
 }				t_params;
 
+typedef struct s_fork
+{
+	pthread_mutex_t	fork;
+	bool			isTaken;
+}			t_fork;
+
 typedef struct s_philo
 {
 	int				id;
@@ -37,9 +43,9 @@ typedef struct s_philo
 	pthread_t		thread;
 	unsigned long	last_meal;
 	pthread_mutex_t	meal_mutex;
-	pthread_mutex_t	*left_fork;
+	struct s_fork	*left_fork;
 	struct s_data	*monitoring;
-	pthread_mutex_t	*right_fork;
+	struct s_fork	*right_fork;
 }				t_philo;
 
 typedef struct s_data
@@ -49,7 +55,7 @@ typedef struct s_data
 	unsigned long	quota;
 	pthread_mutex_t	state;
 	struct s_params	params;
-	pthread_mutex_t	*forks;
+	struct s_fork	*forks;
 	pthread_mutex_t	printer;
 	struct s_philo	*philos;
 }				t_data;
@@ -63,13 +69,17 @@ void			cleanup(t_data *data);
 void			*monitoring(void *arg);
 void			exit_err(char *message);
 int				usage_error(char **argv);
+void			mutex_lock(t_fork *fork);
 int				ft_atoi(const char *nptr);
 size_t			ft_strlen(const char *str);
+void			mutex_unlock(t_fork *fork);
 long			timestamp(unsigned long start);
 int				start_philosophers(t_data *data);
 void			wait_all(t_data *data, pthread_t monitor);
 void			init_params(t_params *params, char **argv);
 void			print(t_data *data, t_philo *philo, char *msg);
+void			clean_forks(t_data *data, unsigned long failed);
+void			clean_meals(t_data *data, unsigned long failed);
 int				start_monitor(t_data *data, pthread_t *monitor_thread);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 08:25:35 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/07 10:07:59 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	cleanup(t_data *data)
 	i = 0;
 	while (i < data->params.nb_philo)
 	{
-		pthread_mutex_destroy(&data->forks[i]);
+		pthread_mutex_destroy(&data->forks[i].fork);
 		pthread_mutex_destroy(&data->philos[i++].meal_mutex);
 	}
 	free(data->forks);

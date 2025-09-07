@@ -12,14 +12,14 @@
 
 #include "philo.h"
 
-static bool	release(t_data *data, pthread_mutex_t *one, pthread_mutex_t *two)
+static bool	release(t_data *data, t_fork *one, t_fork *two)
 {
 	if (stopped(data))
 	{
 		if (one)
-			pthread_mutex_unlock(one);
+			mutex_unlock(one);
 		if (two)
-			pthread_mutex_unlock(two);
+			mutex_unlock(two);
 		return (true);
 	}
 	return (false);
@@ -29,20 +29,20 @@ static bool	take_forks(t_data *data, t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_lock(philo->right_fork);
+		mutex_lock(philo->right_fork);
 		print(data, philo, "has taken a fork");
 		if (release(data, philo->right_fork, NULL))
 			return (false);
-		pthread_mutex_lock(philo->left_fork);
+		mutex_lock(philo->left_fork);
 		print(data, philo, "has taken a fork");
 	}
 	else
 	{
-		pthread_mutex_lock(philo->left_fork);
+		mutex_lock(philo->left_fork);
 		print(data, philo, "has taken a fork");
 		if (release(data, philo->left_fork, NULL))
 			return (false);
-		pthread_mutex_lock(philo->right_fork);
+		mutex_lock(philo->right_fork);
 		print(data, philo, "has taken a fork");
 	}
 	if (release(data, philo->left_fork, philo->right_fork))
@@ -85,15 +85,15 @@ static bool	eat(t_data *data, t_philo *philo)
 	philo->meals++;
 	if (is_last_for_quota(data, philo))
 	{
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
+		mutex_unlock(philo->left_fork);
+		mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(&philo->meal_mutex);
 		return (false);
 	}
 	pthread_mutex_unlock(&philo->meal_mutex);
 	ms_wait(data->params.time_to_eat);
-	pthread_mutex_unlock(philo->left_fork);
-	pthread_mutex_unlock(philo->right_fork);
+	mutex_unlock(philo->left_fork);
+	mutex_unlock(philo->right_fork);
 	return (true);
 }
 

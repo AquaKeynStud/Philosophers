@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/07 10:15:55 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	init_philos(t_data *data)
 	data->philos = malloc(sizeof(t_philo) * nb_philo);
 	if (!data->philos)
 	{
-		free(data->forks);
+		clean_forks(data, 0);
 		exit_err("Failed to allocate memory with malloc for the philosophers");
 	}
 	while (i < nb_philo)
@@ -43,7 +43,7 @@ static void	init_philos(t_data *data)
 		data->philos[i].left_fork = &data->forks[i];
 		data->philos[i].right_fork = &data->forks[(i + 1) % nb_philo];
 		if (pthread_mutex_init(&data->philos[i].meal_mutex, NULL))
-			exit_err("Meal mutex init failed");
+			clean_meals(data, i);
 		i++;
 	}
 }
@@ -53,13 +53,17 @@ static void	init_forks(t_data *data)
 	unsigned long	i;
 
 	i = 0;
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->params.nb_philo);
+	data->forks = malloc(sizeof(t_fork) * data->params.nb_philo);
 	if (!data->forks)
 		exit_err("Failed to allocate memory with malloc for the forks");
 	while (i < data->params.nb_philo)
 	{
-		if (pthread_mutex_init(&data->forks[i], NULL))
+		if (pthread_mutex_init(&data->forks[i].fork, NULL))
+		{
+			clean_forks(data, i);
 			exit_err("Mutex init failed");
+		}
+		data->forks[i].isTaken = false;
 		i++;
 	}
 }

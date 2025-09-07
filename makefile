@@ -29,6 +29,7 @@ D_BON	=	upgrade/
 
 # file lists
 LST_SRC		=	main.c				\
+				forks.c				\
 				monitoring.c		\
 				philosophers.c		\
 				manage_threads.c
