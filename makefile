@@ -135,7 +135,8 @@ valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=valgrind-%p.log ./$(VALARGS)
 
 helgrind:
-	valgrind --tool=helgrind ./$(VALARGS)
+	@$(MAKE) rmv
+	valgrind --tool=helgrind --log-file=valgrind-%p.log ./$(VALARGS)
 
 %:
 	@:

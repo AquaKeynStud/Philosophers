@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:37:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:45:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/08 18:56:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ static void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 	else
 		print_action(philo, "is eating");
 	ms_wait(monitor->params->time_to_eat);
-	philo->last_meal = get_time();
 	sem_post(philo->meal_lock);
 }
 

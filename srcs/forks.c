@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 09:57:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/07 10:15:26 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/08 18:45:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void	mutex_lock(t_fork *fork)
 {
 	pthread_mutex_lock(&fork->fork);
-	fork->isTaken = true;
+	fork->is_taken = true;
 	return ;
 }
 
 void	mutex_unlock(t_fork *fork)
 {
-	fork->isTaken = false;
+	fork->is_taken = false;
 	pthread_mutex_unlock(&fork->fork);
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/08 18:45:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_params
 typedef struct s_fork
 {
 	pthread_mutex_t	fork;
-	bool			isTaken;
+	bool			is_taken;
 }			t_fork;
 
 typedef struct s_philo

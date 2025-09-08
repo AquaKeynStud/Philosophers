@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/07 10:15:55 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/08 18:45:16 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	init_forks(t_data *data)
 			clean_forks(data, i);
 			exit_err("Mutex init failed");
 		}
-		data->forks[i].isTaken = false;
+		data->forks[i].is_taken = false;
 		i++;
 	}
 }

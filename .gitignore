@@ -11,6 +11,7 @@
 a.out
 philo
 philo_bonus
+valgrind*
 
 # Fichiers de sauvegarde / éditeur
 *~

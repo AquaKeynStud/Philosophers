@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:30 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/03 21:51:04 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/08 19:49:27 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,14 @@ static bool	is_last_for_quota(t_data *data, t_philo *philo)
 		{
 			pthread_mutex_lock(&data->printer);
 			printf("%ld %d is eating\n", timestamp(data->start), philo->id);
+			pthread_mutex_lock(&data->state);
 			data->stop = true;
+			pthread_mutex_unlock(&data->state);
 			pthread_mutex_unlock(&data->printer);
 			return (true);
 		}
-		else
-			print(data, philo, "is eating");
 	}
-	else
-		print(data, philo, "is eating");
+	print(data, philo, "is eating");
 	return (false);
 }
 
@@ -106,6 +105,8 @@ void	*routine(void *arg)
 	data = philo->monitoring;
 	while (get_time() < data->start)
 		usleep(100);
+	if (philo->id % 2 == 1)
+		ms_wait(1);
 	while (1)
 	{
 		print(data, philo, "is thinking");
