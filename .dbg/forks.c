@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 09:57:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 11:22:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 11:47:34 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void	mutex_lock(t_fork *fork)
 
 	res = false;
 	while (!res)
+	{
 		res = mutex_trylock(fork);
+		ms_wait(1);
+	}
 	return ;
 }
 

@@ -6,21 +6,21 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/08 18:45:16 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 11:34:00 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-/* -- Includes -- */
+/* -- 🌴 Includes 🌴 -- */
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
 # include <pthread.h>
 
-/* -- Structures -- */
+/* -- 🍱 Structures 🍱 -- */
 typedef struct s_params
 {
 	long			max_meals;
@@ -32,6 +32,7 @@ typedef struct s_params
 
 typedef struct s_fork
 {
+	int				id;
 	pthread_mutex_t	fork;
 	bool			is_taken;
 }			t_fork;
@@ -60,26 +61,43 @@ typedef struct s_data
 	struct s_philo	*philos;
 }				t_data;
 
-/* -- Functions -- */
+/* -- 🦦 Macros 🦦 -- */
+# define VALGRIND 0
+
+/* -- ⏳ Time Functions ⏳ -- */
 unsigned long	get_time(void);
 void			ms_wait(long ms);
-void			*routine(void *arg);
-bool			stopped(t_data *data);
+long			timestamp(unsigned long start);
+
+/* -- 🧽 Cleanup Functions 🧽 -- */
 void			cleanup(t_data *data);
-void			*monitoring(void *arg);
 void			exit_err(char *message);
 int				usage_error(char **argv);
-void			mutex_lock(t_fork *fork);
-int				ft_atoi(const char *nptr);
-size_t			ft_strlen(const char *str);
-void			mutex_unlock(t_fork *fork);
-long			timestamp(unsigned long start);
-int				start_philosophers(t_data *data);
 void			wait_all(t_data *data, pthread_t monitor);
-void			init_params(t_params *params, char **argv);
-void			print(t_data *data, t_philo *philo, char *msg);
+bool			release(t_data *data, t_fork *one, t_fork *two);
 void			clean_forks(t_data *data, unsigned long failed);
 void			clean_meals(t_data *data, unsigned long failed);
+
+/* -- 🔪 Utils Functions 🔪 -- */
+int				ft_atoi(const char *nptr);
+size_t			ft_strlen(const char *str);
+
+/* -- 🔒 Mutex Functions 🔒 -- */
+void			mutex_lock(t_fork *fork);
+void			mutex_unlock(t_fork *fork);
+bool			mutex_trylock(t_fork *fork);
+
+/* -- 🍣 Thread Functions 🍣 -- */
+void			*routine(void *arg);
+void			*monitoring(void *arg);
+int				start_philosophers(t_data *data);
+bool			take_forks_odd(t_data *data, t_philo *philo);
 int				start_monitor(t_data *data, pthread_t *monitor_thread);
+
+/* -- 🏯 Setup Functions 🏯 -- */
+bool			stopped(t_data *data);
+void			print_solo_report(t_data *data);
+void			init_params(t_params *params, char **argv);
+void			print(t_data *data, t_philo *philo, char *msg);
 
 #endif

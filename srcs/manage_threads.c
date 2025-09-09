@@ -6,11 +6,24 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 08:25:35 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/07 10:07:59 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 10:01:41 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+bool	release(t_data *data, t_fork *one, t_fork *two)
+{
+	if (stopped(data))
+	{
+		if (one)
+			mutex_unlock(one);
+		if (two)
+			mutex_unlock(two);
+		return (true);
+	}
+	return (false);
+}
 
 void	wait_all(t_data *data, pthread_t monitor)
 {

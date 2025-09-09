@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:30 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 11:33:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 11:47:58 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ bool	take_forks_odd(t_data *data, t_philo *philo)
 		second = philo->left_fork;
 		if (mutex_trylock(first))
 			break ;
+		ms_wait(1);
 	}
 	print(data, philo, "has taken a fork 🍴");
 	if (release(data, first, NULL))
 		return (false);
-	while (1)
-		if (mutex_trylock(second))
-			break ;
+	while (!mutex_trylock(second))
+		ms_wait(1);
 	print(data, philo, "has taken a fork 🍴");
 	if (release(data, second, first))
 		return (false);

@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:04 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/03 21:53:44 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 10:38:49 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static bool	is_dead(t_data *data, t_philo *philo)
 	pthread_mutex_lock(&philo->meal_mutex);
 	if (get_time() - philo->last_meal >= data->params.time_to_die)
 	{
-		print(data, philo, "died");
+		print(data, philo, "died 🪦");
 		pthread_mutex_unlock(&philo->meal_mutex);
 		pthread_mutex_lock(&data->state);
 		data->stop = true;
