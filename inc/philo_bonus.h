@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:40 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:48:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/10 16:16:41 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_monitor
 	sem_t					*forks;
 	sem_t					*write;
 	sem_t					*quota;
+	sem_t					*limit;
 	bool					active;
 	struct s_params			*params;
 	struct s_philo_bonus	*philos;

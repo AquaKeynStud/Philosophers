@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:22 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:48:39 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/10 17:24:17 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	print_action(t_philo_bonus *philo, const char *msg)
 	if (!philo->active)
 		return ;
 	sem_wait(philo->monitor->write);
-	printf("%lu %d %s\n", timestamp(philo->monitor->start), philo->id, msg);
+	printf("\e[1;34m-{%lu}-", timestamp(philo->monitor->start));
+	printf("\e[0;1m %d %s\e[0m\n", philo->id, msg);
 	sem_post(philo->monitor->write);
 }
 
@@ -41,40 +42,41 @@ static bool	init_philo(t_philo_bonus *philo, t_monitor *monitor, int i)
 	return (true);
 }
 
-static void	init_monitor(t_monitor *monitor, char **argv)
+static void	init_monitor(t_monitor *data, char **argv)
 {
 	int	i;
-	int	nb_philos;
+	int	n_philo;
 
 	i = 0;
-	memset(monitor, 0, sizeof(t_monitor));
-	monitor->params = malloc(sizeof(t_params));
-	if (!monitor->params)
-		exit_err("Failed to get program arguments\n");
-	init_params(monitor->params, argv);
-	nb_philos = monitor->params->nb_philo;
-	monitor->start = get_time() + nb_philos;
-	monitor->pids = malloc(sizeof(pid_t) * nb_philos);
-	monitor->philos = malloc(sizeof(t_philo_bonus) * nb_philos);
-	if (!monitor->pids || !monitor->philos
-		|| !init_sem(&monitor->stop, 0, "/philo_stop")
-		|| !init_sem(&monitor->quota, 0, "/philo_quota")
-		|| !init_sem(&monitor->write, 1, "/philo_write")
-		|| !init_sem(&monitor->forks, nb_philos, "/philo_forks"))
-		clean_exit(monitor, 1);
-	while (i < nb_philos)
-	{
-		if (!init_philo(&monitor->philos[i], monitor, i))
-			clean_exit(monitor, 1);
-		i++;
-	}
+	memset(data, 0, sizeof(t_monitor));
+	data->params = malloc(sizeof(t_params));
+	if (!data->params)
+		exit_err("\e[1;31m🍁 Failed to get program arguments 🍁\e[0m\n");
+	init_params(data->params, argv);
+	n_philo = data->params->nb_philo;
+	data->start = get_time() + n_philo;
+	data->pids = malloc(sizeof(pid_t) * n_philo);
+	data->philos = malloc(sizeof(t_philo_bonus) * n_philo);
+	if (!data->pids || !data->philos
+		|| !init_sem(&data->stop, 0, "p_stop")
+		|| !init_sem(&data->quota, 0, "p_quota")
+		|| !init_sem(&data->write, 1, "p_write")
+		|| !init_sem(&data->forks, n_philo, "p_forks")
+		|| !init_sem(&data->limit, ((n_philo / 2) + (n_philo % 2)), "p_limit"))
+		clean_exit(data, 1);
+	while (i < n_philo)
+		if (!init_philo(&data->philos[i], data, i))
+			clean_exit(data, 1);
+		else
+			i++;
 }
 
 static int	handle_single_philo_bonus(t_monitor *monitor)
 {
-	printf("0 1 has taken a fork\n");
+	printf("\e[1;34m0\e[0;1m 1 has taken a fork\e[0m\n");
 	ms_wait(monitor->params->time_to_die);
-	printf("%ld 1 died\n", monitor->params->time_to_die);
+	printf("\e[1;34m-{%ld}-", monitor->params->time_to_die);
+	printf("\e[0;1m 1 died\e[0m\n");
 	clean_exit(monitor, 0);
 	return (0);
 }

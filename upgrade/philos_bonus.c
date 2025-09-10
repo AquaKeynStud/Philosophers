@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:37:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/08 18:56:47 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/10 17:17:46 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static void	*detect_death(void *arg)
 		if (get_time() - philo->last_meal >= monitor->params->time_to_die)
 		{
 			sem_wait(philo->monitor->write);
-			printf("%lu %d died\n", timestamp(monitor->start), philo->id);
+			printf("\e[1;34m-{%lu}-", timestamp(monitor->start));
+			printf("\e[0;1m %d died 🩻\e[0m\n", philo->id);
 			sem_post(philo->meal_lock);
 			philo->active = false;
 			clean_exit(monitor, 1);
@@ -62,10 +63,11 @@ static void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 	{
 		sem_post(monitor->quota);
 		sem_wait(monitor->write);
-		printf("%lu %d is eating\n", timestamp(monitor->start), id);
+		printf("\e[1;34m-{%lu}-", timestamp(monitor->start));
+		printf("\e[0;1m %d is eating 🍜\e[0m\n", id);
 	}
 	else
-		print_action(philo, "is eating");
+		print_action(philo, "is eating 🍜");
 	ms_wait(monitor->params->time_to_eat);
 	sem_post(philo->meal_lock);
 }
@@ -83,15 +85,19 @@ int	philo_routine(t_philo_bonus *philo)
 	pthread_detach(quota_thread);
 	while (1)
 	{
-		print_action(philo, "is thinking");
+		print_action(philo, "is thinking 💭");
+		if (philo->monitor->params->nb_philo % 2)
+			ms_wait(1);
+		sem_wait(philo->monitor->limit);
 		sem_wait(philo->monitor->forks);
-		print_action(philo, "has taken a fork");
+		print_action(philo, "has taken a fork 🍴");
 		sem_wait(philo->monitor->forks);
-		print_action(philo, "has taken a fork");
+		print_action(philo, "has taken a fork 🍴");
 		eat_bonus(philo, philo->monitor, philo->id);
 		sem_post(philo->monitor->forks);
 		sem_post(philo->monitor->forks);
-		print_action(philo, "is sleeping");
+		sem_post(philo->monitor->limit);
+		print_action(philo, "is sleeping 💤");
 		ms_wait(philo->monitor->params->time_to_sleep);
 	}
 }

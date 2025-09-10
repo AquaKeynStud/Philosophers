@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 13:13:06 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/05 18:53:43 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/10 17:06:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@ void	clean_exit(t_monitor *monitor, int code)
 	if (monitor->pids)
 		free(monitor->pids);
 	if (monitor->forks)
-		clean_sem(monitor->forks, "/philo_forks");
+		clean_sem(monitor->forks, "p_forks");
 	if (monitor->write)
-		clean_sem(monitor->write, "/philo_write");
+		clean_sem(monitor->write, "p_write");
 	if (monitor->quota)
-		clean_sem(monitor->quota, "/philo_quota");
+		clean_sem(monitor->quota, "p_quota");
+	if (monitor->limit)
+		clean_sem(monitor->quota, "p_limit");
 	if (monitor->stop)
-		clean_sem(monitor->stop, "/philo_stop");
+		clean_sem(monitor->stop, "p_stop");
 	exit(code);
 }
 

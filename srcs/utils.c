@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 09:46:17 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/17 10:34:31 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/10 17:28:27 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 int	usage_error(char **argv)
 {
-	write(2, "\n\e[1m\e[31mUsage:\t", 17);
+	write(2, "\n\e[1;31m🍁 Usage: ", 21);
 	write(2, argv[0], ft_strlen(argv[0]));
 	write(2, " [nb_philos] [time to die] [time to eat]", 40);
-	write(2, " [time to sleep] (optionnal : max heal nb)\n\n\e[0m", 48);
+	write(2, " [time to sleep] (optionnal: quota) 🍁\n\n\e[0m", 47);
 	return (1);
 }
 

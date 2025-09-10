@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:07:30 by arocca            #+#    #+#             */
-/*   Updated: 2025/08/17 15:14:09 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/10 17:22:38 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ bool	init_sem(sem_t **sem, int n, const char *unlink)
 	*sem = sem_open(unlink, (O_CREAT | O_EXCL), PERMS, n);
 	if (*sem == SEM_FAILED)
 	{
-		printf("Semaphore initialisation failed on : %s\n", unlink);
+		printf("\e[1;31m🔥 Semaphore initialisation failed on: ");
+		printf("%s 🔥\e[0m\n", unlink);
 		return (false);
 	}
 	return (true);
