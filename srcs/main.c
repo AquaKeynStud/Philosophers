@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 22:39:21 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 00:57:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	init_forks(t_data *data)
 		if (pthread_mutex_init(&data->forks[i].fork, NULL))
 		{
 			clean_forks(data, i);
-			exit_err("⛓️‍💥 Fork mutex init failed ⛓️‍💥");
+			exit_err("🍴 Fork mutex init failed 🍴");
 		}
 		i++;
 	}
@@ -81,11 +81,11 @@ static void	init_data(t_data *data, char **argv)
 	if (data->params.nb_philo == 1)
 		return (print_solo_report(data));
 	if (pthread_mutex_init(&data->printer, NULL))
-		exit_err("⛓️‍💥 Printer mutex init failed ⛓️‍💥");
+		exit_err("📝 Printer mutex init failed 📝");
 	if (pthread_mutex_init(&data->state, NULL))
 	{
 		pthread_mutex_destroy(&data->printer);
-		exit_err("⛓️‍💥 State mutex init failed ⛓️‍💥");
+		exit_err("🧬 State mutex init failed 🧬");
 	}
 	if (3 * data->params.nb_philo < 50)
 		data->start = get_time() + 50;

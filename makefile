@@ -95,7 +95,7 @@ vpath %.c $(D_SRC) $(D_BON)
 
 $(D_OBJ)%.o: %.c | $(D_OBJ) $(D_DEP) makefile
 	@echo "\e[1;34m☄️  Compiling $^ into $@...	\e[0m"
-	@$(CC) $(CFLAGS) -I$(D_INC) -c $< -o $@
+	@$(CC) $(CFLAGS) -g3 -I$(D_INC) -c $< -o $@
 	@mv $(@:.o=.d) $(D_DEP)
 
 -include $(DEPS)
@@ -171,25 +171,25 @@ helgrind: $(D_REP)
 %:
 	@:
 
-wrap.so: wrap.c
+$(D_REP)wrap.so: .dbg/wrap.c | $(D_REP)
 	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
-	gcc -DLIMIT=ARGS -fPIC -shared -o wrap.so wrap.c -ldl -lpthread
+	gcc -DLIMIT=ARGS -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
 	@echo "\e[1;36m🐳 Wrapper créé avec succès 🐳\e[0m"
 
-def: wrap.c
-	@gcc -fPIC -shared -o wrap.so wrap.c -ldl -lpthread
+def: .dbg/wrap.c | $(D_REP)
+	@gcc -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
 	@echo "\e[1;36m🐳 Wrapper créé avec succès 🐳\e[0m"
 
-break: wrap.so
-	@$(MAKE) -C .. all
+break: $(D_REP)wrap.so
+	@$(MAKE) all
 	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
-	LD_PRELOAD=./wrap.so		\
+	LD_PRELOAD=$(D_REP)wrap.so	\
 	valgrind --leak-check=full	\
 	--show-leak-kinds=all		\
 	--track-origins=yes			\
-	../philo $$ARGS
+	./philo $$ARGS
 
-rm:
+rmw:
 	@$(MAKE) -C .. fclean
-	@$(RM) wrap.so
+	@$(RM) .dbg/wrap.so
 	@echo "\e[1;31m🍂 Wrapper et programme supprimés 🍂\e[0m"

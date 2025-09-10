@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 09:46:17 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/10 17:28:27 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 01:00:56 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	init_params(t_params *params, char **argv)
 	{
 		convert = ft_atoi(argv[i]);
 		if (convert <= 0 && i != 1)
-			exit_err("\nAll parameters must be positive numbers\n");
+			exit_err("🍁 All parameters must be positive numbers 🍁\n"); 
 		else if (i == 1 && (convert <= 0 || convert > 200))
-			exit_err("\nYou can only launch between 1 and 200 philosphers\n");
+			exit_err("🍁 You can only launch between 1 and 200 philosphers 🍁\n");
 		if (i == 1)
 			params->nb_philo = convert;
 		else if (i == 2)

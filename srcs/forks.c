@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 09:57:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 11:22:36 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 01:05:32 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,6 @@ void	clean_meals(t_data *data, unsigned long failed)
 	while (i < stop)
 		pthread_mutex_destroy(&data->philos[i++].meal_mutex);
 	free(data->philos);
-	exit_err("⛓️‍💥 Meal mutex init failed ⛓️‍💥");
+	exit_err("🍡 Meal mutex init failed 🍡");
 	return ;
 }
