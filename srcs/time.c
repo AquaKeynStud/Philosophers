@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 18:21:38 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 10:38:56 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 22:40:18 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ long	timestamp(unsigned long start)
 
 void	print_solo_report(t_data *data)
 {
-	printf("\e[96m\e[1m-{%d}-\e[0m", 0);
+	printf("\e[1;96m-{%d}-\e[0m", 0);
 	printf("\e[1m 1 has taken a fork 🍴\e[0m\n");
 	ms_wait(data->params.time_to_die);
-	printf("\e[96m\e[1m-{%ld}-\e[0m", data->params.time_to_die);
+	printf("\e[1;96m-{%ld}-\e[0m", data->params.time_to_die);
 	printf("\e[1m 1 died 🪦\e[0m\n");
 	return ;
 }

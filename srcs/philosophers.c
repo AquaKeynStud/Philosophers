@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 16:06:30 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 11:33:40 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/09 22:39:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static bool	is_last_for_quota(t_data *data, t_philo *philo)
 		if (last)
 		{
 			pthread_mutex_lock(&data->printer);
-			printf("\e[96m\e[1m-{%ld}-\e[0m", timestamp(data->start));
+			printf("\e[1;96m-{%ld}-\e[0m", timestamp(data->start));
 			printf("\e[1m %d is eating 🍝\e[0m\n", philo->id);
 			pthread_mutex_lock(&data->state);
 			data->stop = true;
