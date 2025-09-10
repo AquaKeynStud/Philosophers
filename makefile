@@ -133,6 +133,8 @@ rmb:
 norminette:
 	norminette $(D_INC) $(D_SRC) $(D_BON)
 
+
+
 # DEBUGGING
 VALARGS		:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
@@ -168,3 +170,26 @@ helgrind: $(D_REP)
 
 %:
 	@:
+
+wrap.so: wrap.c
+	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
+	gcc -DLIMIT=ARGS -fPIC -shared -o wrap.so wrap.c -ldl -lpthread
+	@echo "\e[1;36m🐳 Wrapper créé avec succès 🐳\e[0m"
+
+def: wrap.c
+	@gcc -fPIC -shared -o wrap.so wrap.c -ldl -lpthread
+	@echo "\e[1;36m🐳 Wrapper créé avec succès 🐳\e[0m"
+
+break: wrap.so
+	@$(MAKE) -C .. all
+	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
+	LD_PRELOAD=./wrap.so		\
+	valgrind --leak-check=full	\
+	--show-leak-kinds=all		\
+	--track-origins=yes			\
+	../philo $$ARGS
+
+rm:
+	@$(MAKE) -C .. fclean
+	@$(RM) wrap.so
+	@echo "\e[1;31m🍂 Wrapper et programme supprimés 🍂\e[0m"
