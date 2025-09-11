@@ -154,7 +154,7 @@ def: .dbg/wrap.c | $(D_REP)
 	@gcc -DBREAK=$(firstword $(filter-out $@,$(MAKECMDGOALS))) -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
 	@echo "\e[1;36m🐳 Wrapper created successfully (mutex limit set to $(firstword $(filter-out $@,$(MAKECMDGOALS)))) 🐳\e[0m"
 
-vmake: $(VOBJ)
+vmake: $(VOBJ) | $(D_OBJ)
 	@$(RM) $(D_OBJ)fork.o $(D_OBJ)philosophers.o
 	@mv $(VOBJ) $(D_OBJ)
 	@echo "\e[1;33m🧬 Modification of clocks for valgrind 🧬\e[0m"
