@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 09:57:52 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/11 01:05:32 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 09:57:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void	clean_forks(t_data *data, unsigned long failed)
 
 	i = 0;
 	if (failed)
-		stop = failed;
+		stop = failed - 1;
 	else
-		stop = data->params.nb_philo;
+		stop = data->params.nb_philo;	
 	while (i < stop)
 		pthread_mutex_destroy(&data->forks[i++].fork);
 	free(data->forks);
@@ -66,7 +66,7 @@ void	clean_meals(t_data *data, unsigned long failed)
 
 	i = 0;
 	if (failed)
-		stop = failed;
+		stop = failed - 1;
 	else
 		stop = data->params.nb_philo;
 	clean_forks(data, 0);

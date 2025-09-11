@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:02:13 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/11 00:57:24 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 09:57:47 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	init_philos(t_data *data)
 		data->philos[i].left_fork = &data->forks[i];
 		data->philos[i].right_fork = &data->forks[(i + 1) % nb_philo];
 		if (pthread_mutex_init(&data->philos[i].meal_mutex, NULL))
-			clean_meals(data, i);
+			clean_meals(data, i + 1);
 		i++;
 	}
 }
@@ -65,7 +65,7 @@ static void	init_forks(t_data *data)
 		data->forks[i].is_taken = false;
 		if (pthread_mutex_init(&data->forks[i].fork, NULL))
 		{
-			clean_forks(data, i);
+			clean_forks(data, i + 1);
 			exit_err("🍴 Fork mutex init failed 🍴");
 		}
 		i++;

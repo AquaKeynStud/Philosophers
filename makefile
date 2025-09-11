@@ -136,7 +136,7 @@ norminette:
 
 
 # DEBUGGING
-VALARGS		:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+PARAMS		:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
 $(D_REP): $(D_BLD)
 	@$(MKDIR) $@
@@ -146,39 +146,51 @@ VOBJ = .dbg/forks.o .dbg/philosophers.o
 .dbg/%.o: .dbg/%.c
 	@$(CC) -Wall -Wextra -Werror -I$(D_INC) -fPIC -c $< -o $@
 
+$(D_REP)wrap.so: .dbg/wrap.c | $(D_REP)
+	@gcc -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
+	@echo "\e[1;36m🐳 Wrapper created successfully 🐳\e[0m"
+
+def: .dbg/wrap.c | $(D_REP)
+	@gcc -DBREAK=$(firstword $(filter-out $@,$(MAKECMDGOALS))) -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
+	@echo "\e[1;36m🐳 Wrapper created successfully (mutex limit set to $(firstword $(filter-out $@,$(MAKECMDGOALS)))) 🐳\e[0m"
+
 vmake: $(VOBJ)
 	@$(RM) $(D_OBJ)fork.o $(D_OBJ)philosophers.o
 	@mv $(VOBJ) $(D_OBJ)
-	@echo "\e[1;33m🧬 Modification des clocks pour valgrind 🧬\e[0m"
+	@echo "\e[1;33m🧬 Modification of clocks for valgrind 🧬\e[0m"
 	@$(MAKE) all
-
-rmv:
-	@$(RM) $(wildcard $(D_REP)*.log)
-	@echo "\e[1;31m🍁 Helgrind/Valgrind reports had been suppressed 🍁\e[0m"
-
-valgrind: $(D_REP)
-	@$(MAKE) rmv
-	@$(MAKE) vmake
-	@echo "\e[1;34m🌊 Generating program and valgrind logs ... 🌊\e[0m"
-	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=$(D_REP)valgrind-%p.log ./$(VALARGS) > $(D_REP)philo.log
-
-helgrind: $(D_REP)
-	@$(MAKE) rmv
-	@$(MAKE) vmake
-	@echo "\e[1;34m🎐 Generating program and helgrind logs ... 🎐\e[0m"
-	@valgrind --tool=helgrind --log-file=$(D_REP)helgrind-%p.log ./$(VALARGS) > $(D_REP)philo.log
 
 %:
 	@:
 
-$(D_REP)wrap.so: .dbg/wrap.c | $(D_REP)
-	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
-	gcc -DLIMIT=ARGS -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
-	@echo "\e[1;36m🐳 Wrapper créé avec succès 🐳\e[0m"
+valgrind: $(D_REP)
+	@if ! echo "$(word 2,$(MAKECMDGOALS))" | grep -Eq '^(philo|philo_bonus)$$'; then	\
+		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
+		exit 1;	\
+	fi
+	@$(MAKE) rmv
+	@$(MAKE) vmake
+	@echo "\e[1;34m🌊 Generating program and valgrind logs ... 🌊\e[0m"
+	@valgrind						\
+	--leak-check=full					\
+	--track-origins=yes					\
+	--trace-children=yes				\
+	--show-leak-kinds=all				\
+	--log-file=$(D_REP)valgrind-%p.log	\
+	./$(PARAMS) > $(D_REP)philo.log
 
-def: .dbg/wrap.c | $(D_REP)
-	@gcc -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
-	@echo "\e[1;36m🐳 Wrapper créé avec succès 🐳\e[0m"
+helgrind: $(D_REP)
+	@if ! echo "$(word 2,$(MAKECMDGOALS))" | grep -Eq '^(philo|philo_bonus)$$'; then	\
+		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
+		exit 1;	\
+	fi
+	@$(MAKE) rmv
+	@$(MAKE) vmake
+	@echo "\e[1;34m🎐 Generating program and helgrind logs ... 🎐\e[0m"
+	@valgrind						\
+	--tool=helgrind						\
+	--log-file=$(D_REP)helgrind-%p.log	\
+	./$(PARAMS) > $(D_REP)philo.log
 
 break: $(D_REP)wrap.so
 	@$(MAKE) all
@@ -188,6 +200,10 @@ break: $(D_REP)wrap.so
 	--show-leak-kinds=all		\
 	--track-origins=yes			\
 	./philo $$ARGS
+
+rmv:
+	@$(RM) $(wildcard $(D_REP)*.log)
+	@echo "\e[1;31m🍁 Helgrind/Valgrind reports had been suppressed 🍁\e[0m"
 
 rmw:
 	@$(MAKE) -C .. fclean

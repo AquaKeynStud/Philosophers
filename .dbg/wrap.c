@@ -4,7 +4,7 @@
 #include <dlfcn.h>
 
 #ifndef BREAK
-	#define BREAK 5
+	#define BREAK 1
 #endif
 
 static int (*real_pthread_mutex_init)(pthread_mutex_t *, const pthread_mutexattr_t *) = NULL;
