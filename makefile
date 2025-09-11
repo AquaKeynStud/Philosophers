@@ -1,4 +1,4 @@
-.PHONY : all bonus clean fclean re reb rm rmb norminette rmv valgrind helgrind
+.PHONY : all bonus clean fclean re reb rm rmb norminette log def vmake valgrind helgrind break rmv rmw logclean
 
 NAME := philo
 
@@ -143,6 +143,18 @@ $(D_REP): $(D_BLD)
 
 VOBJ = .dbg/forks.o .dbg/philosophers.o
 
+log:
+	@if ! echo "$(word 2,$(MAKECMDGOALS))" | grep -Eq '^(philo|philo_bonus)$$'; then	\
+		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
+		exit 1;	\
+	fi
+	@$(MAKE) $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) rmv
+	@echo "\e[1;33m🧧 Generating program logs (alpha)... 🧧\e[0m"
+	@./$(PARAMS) > $(D_REP)philo.log
+	@$(MAKE) logclean
+	@cat $(D_REP)philo.log
+
 .dbg/%.o: .dbg/%.c
 	@$(CC) -Wall -Wextra -Werror -I$(D_INC) -fPIC -c $< -o $@
 
@@ -168,8 +180,11 @@ valgrind: $(D_REP)
 		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
 		exit 1;	\
 	fi
+	@$(MAKE) $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) rmv
-	@$(MAKE) vmake
+	@if [ "$(word 2,$(MAKECMDGOALS))" = "philo" ]; then \
+    	$(MAKE) vmake; \
+	fi
 	@echo "\e[1;34m🌊 Generating program and valgrind logs ... 🌊\e[0m"
 	@valgrind						\
 	--leak-check=full					\
@@ -178,19 +193,24 @@ valgrind: $(D_REP)
 	--show-leak-kinds=all				\
 	--log-file=$(D_REP)valgrind-%p.log	\
 	./$(PARAMS) > $(D_REP)philo.log
+	@$(MAKE) logclean
 
 helgrind: $(D_REP)
 	@if ! echo "$(word 2,$(MAKECMDGOALS))" | grep -Eq '^(philo|philo_bonus)$$'; then	\
 		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
 		exit 1;	\
 	fi
+	@$(MAKE) $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) rmv
-	@$(MAKE) vmake
+	@if [ "$(word 2,$(MAKECMDGOALS))" = "philo" ]; then \
+    	$(MAKE) vmake; \
+	fi
 	@echo "\e[1;34m🎐 Generating program and helgrind logs ... 🎐\e[0m"
 	@valgrind						\
 	--tool=helgrind						\
 	--log-file=$(D_REP)helgrind-%p.log	\
 	./$(PARAMS) > $(D_REP)philo.log
+	@$(MAKE) logclean
 
 break: $(D_REP)wrap.so
 	@$(MAKE) all
@@ -206,6 +226,18 @@ rmv:
 	@echo "\e[1;31m🍁 Helgrind/Valgrind reports had been suppressed 🍁\e[0m"
 
 rmw:
-	@$(MAKE) -C .. fclean
-	@$(RM) .dbg/wrap.so
+	@$(RM) $(D_REP)wrap.so
 	@echo "\e[1;31m🍂 Wrapper et programme supprimés 🍂\e[0m"
+
+logclean: $(D_REP)philo.log
+	@sed -i						\
+	-e 's/\x1b\[1;34m-{//g'			\
+	-e 's/}-\x1b\[0;1m//g'			\
+	-e 's/ 💭\x1b\[0m//g'			\
+	-e 's/ 🍴\x1b\[0m//g'			\
+	-e 's/ 🍜\x1b\[0m//g'			\
+	-e 's/ 💤\x1b\[0m//g'			\
+	-e 's/ 🩻\x1b\[0m//g'			\
+	-e 's/ 🍝\x1b\[0m//g'			\
+	-e 's/ 🪦\x1b\[0m//g'			\
+	$(D_REP)philo.log
