@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:10:28 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/09 11:34:00 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 16:47:24 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,6 @@ typedef struct s_data
 	struct s_philo	*philos;
 }				t_data;
 
-/* -- 🦦 Macros 🦦 -- */
-# define VALGRIND 0
-
 /* -- ⏳ Time Functions ⏳ -- */
 unsigned long	get_time(void);
 void			ms_wait(long ms);
@@ -79,7 +76,6 @@ void			clean_forks(t_data *data, unsigned long failed);
 void			clean_meals(t_data *data, unsigned long failed);
 
 /* -- 🔪 Utils Functions 🔪 -- */
-int				ft_atoi(const char *nptr);
 size_t			ft_strlen(const char *str);
 
 /* -- 🔒 Mutex Functions 🔒 -- */
