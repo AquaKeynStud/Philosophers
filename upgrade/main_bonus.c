@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:22 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/10 17:24:17 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 10:29:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ static void	init_monitor(t_monitor *data, char **argv)
 	while (i < n_philo)
 		if (!init_philo(&data->philos[i], data, i))
 			clean_exit(data, 1);
-		else
-			i++;
+	else
+		i++;
 }
 
 static int	handle_single_philo_bonus(t_monitor *monitor)

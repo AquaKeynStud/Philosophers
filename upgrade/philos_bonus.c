@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:37:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/10 17:17:46 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 10:31:48 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,15 @@ static void	eat_bonus(t_philo_bonus *philo, t_monitor *monitor, int id)
 	sem_post(philo->meal_lock);
 }
 
+static void	take_forks_bonus(t_philo_bonus *philo)
+{
+	sem_wait(philo->monitor->limit);
+	sem_wait(philo->monitor->forks);
+	print_action(philo, "has taken a fork 🍴");
+	sem_wait(philo->monitor->forks);
+	print_action(philo, "has taken a fork 🍴");
+}
+
 int	philo_routine(t_philo_bonus *philo)
 {
 	pthread_t	death_thread;
@@ -88,11 +97,7 @@ int	philo_routine(t_philo_bonus *philo)
 		print_action(philo, "is thinking 💭");
 		if (philo->monitor->params->nb_philo % 2)
 			ms_wait(1);
-		sem_wait(philo->monitor->limit);
-		sem_wait(philo->monitor->forks);
-		print_action(philo, "has taken a fork 🍴");
-		sem_wait(philo->monitor->forks);
-		print_action(philo, "has taken a fork 🍴");
+		take_forks_bonus(philo);
 		eat_bonus(philo, philo->monitor, philo->id);
 		sem_post(philo->monitor->forks);
 		sem_post(philo->monitor->forks);
