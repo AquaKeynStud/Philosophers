@@ -1,4 +1,4 @@
-.PHONY : all bonus clean fclean re reb rm rmb norminette log def vmake valgrind helgrind break rmv rmw logclean
+.PHONY : all bonus clean fclean re reb rm rmb norminette log def vmake valgrind helgrind break rmv rmw logclean ignore-numbers
 
 NAME := philo
 
@@ -136,23 +136,31 @@ norminette:
 
 
 # DEBUGGING
-PARAMS		:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+PARAMS			:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+NUMERIC_GOALS	:=	$(shell printf "%s\n" $(MAKECMDGOALS) | grep -E '^[0-9]+$$')
 
 $(D_REP): $(D_BLD)
 	@$(MKDIR) $@
 
 VOBJ = .dbg/forks.o .dbg/philosophers.o
 
-log:
+ignore-numbers:
+	@:
+
+$(NUMERIC_GOALS): ignore-numbers
+
+log: $(D_REP)
 	@if ! echo "$(word 2,$(MAKECMDGOALS))" | grep -Eq '^(philo|philo_bonus)$$'; then	\
 		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
 		exit 1;	\
 	fi
 	@$(MAKE) $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) rmv
-	@echo "\e[1;33m🧧 Generating program logs (alpha)... 🧧\e[0m"
+	@echo "\e[1;33m🧧 Generating program logs... 🧧\e[0m"
 	@./$(PARAMS) > $(D_REP)philo.log
 	@$(MAKE) logclean
+
+cat: $(D_REP)philo.log
 	@cat $(D_REP)philo.log
 
 .dbg/%.o: .dbg/%.c
@@ -221,11 +229,11 @@ break: $(D_REP)wrap.so
 		exit 1;	\
 	fi
 	@$(MAKE) $(word 2,$(MAKECMDGOALS))
-	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
-	LD_PRELOAD=$(D_REP)wrap.so	\
-	valgrind --leak-check=full	\
-	--show-leak-kinds=all		\
-	--track-origins=yes			\
+	@ARGS="$(filter-out $@,$(MAKECMDGOALS))";	\
+	LD_PRELOAD=$(D_REP)wrap.so					\
+	valgrind --leak-check=full					\
+	--show-leak-kinds=all						\
+	--track-origins=yes							\
 	./$$ARGS
 
 rmv:
@@ -248,3 +256,12 @@ logclean: $(D_REP)philo.log
 	-e 's/ 🍝\x1b\[0m//g'			\
 	-e 's/ 🪦\x1b\[0m//g'			\
 	$(D_REP)philo.log
+	@echo "\e[1;34m🎏 Log file cleaned and ready ! 🎏\e[0m"
+
+logcleanw: $(D_REP)philo.log
+	@sed -i''					\
+	-e 's/\x1b\[1;96m-{//g'			\
+	-e 's/\x1b\[96m\x1b\[1m-{//g'	\
+	-e 's/}-\x1b\[0m\x1b\[1m//g'	\
+	$(D_REP)philo.log
+	@echo "\e[1;34m🎏 (Window version) Log file cleaned and ready ! 🎏\e[0m"
