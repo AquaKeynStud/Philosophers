@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 14:35:22 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/11 10:29:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 10:38:21 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,10 @@ static void	init_monitor(t_monitor *data, char **argv)
 
 static int	handle_single_philo_bonus(t_monitor *monitor)
 {
-	printf("\e[1;34m0\e[0;1m 1 has taken a fork\e[0m\n");
+	printf("\e[1;34m-{0}-\e[0;1m 1 has taken a fork 🍴\e[0m\n");
 	ms_wait(monitor->params->time_to_die);
 	printf("\e[1;34m-{%ld}-", monitor->params->time_to_die);
-	printf("\e[0;1m 1 died\e[0m\n");
+	printf("\e[0;1m 1 died 🩻\e[0m\n");
 	clean_exit(monitor, 0);
 	return (0);
 }

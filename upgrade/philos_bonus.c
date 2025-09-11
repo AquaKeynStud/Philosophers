@@ -6,7 +6,7 @@
 /*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:37:12 by arocca            #+#    #+#             */
-/*   Updated: 2025/09/11 10:31:48 by arocca           ###   ########.fr       */
+/*   Updated: 2025/09/11 10:39:41 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	philo_routine(t_philo_bonus *philo)
 	{
 		print_action(philo, "is thinking 💭");
 		if (philo->monitor->params->nb_philo % 2)
-			ms_wait(1);
+			usleep(500);
 		take_forks_bonus(philo);
 		eat_bonus(philo, philo->monitor, philo->id);
 		sem_post(philo->monitor->forks);
