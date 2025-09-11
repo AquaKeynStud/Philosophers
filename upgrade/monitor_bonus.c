@@ -20,6 +20,12 @@ static void	clean_philos(t_monitor *monitor)
 	char			*name;
 
 	i = 0;
+	if (!monitor->limit || !monitor->philos)
+	{
+		free(monitor->philos);
+		monitor->philos = NULL;
+		return ;
+	}
 	while (i < monitor->params->nb_philo)
 	{
 		if (!monitor->philos || !monitor->philos[i].meal_lock)

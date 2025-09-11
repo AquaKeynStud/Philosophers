@@ -163,8 +163,11 @@ $(D_REP)wrap.so: .dbg/wrap.c | $(D_REP)
 	@echo "\e[1;36m🐳 Wrapper created successfully 🐳\e[0m"
 
 def: .dbg/wrap.c | $(D_REP)
-	@gcc -DBREAK=$(firstword $(filter-out $@,$(MAKECMDGOALS))) -fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
-	@echo "\e[1;36m🐳 Wrapper created successfully (mutex limit set to $(firstword $(filter-out $@,$(MAKECMDGOALS)))) 🐳\e[0m"
+	@gcc	\
+	-DMTXLIM=$(word 1,$(filter-out $@,$(MAKECMDGOALS)))	\
+	-DSEMLIM=$(word 2,$(filter-out $@,$(MAKECMDGOALS)))	\
+	-fPIC -shared -o $(D_REP)wrap.so .dbg/wrap.c -ldl -lpthread
+	@echo "\e[1;36m🐳 Wrapper created successfully (mutex: $(word 1,$(filter-out $@,$(MAKECMDGOALS))), sem: $(word 2,$(filter-out $@,$(MAKECMDGOALS)))) 🐳\e[0m"
 
 vmake: $(VOBJ) | $(D_OBJ)
 	@$(RM) $(D_OBJ)fork.o $(D_OBJ)philosophers.o
@@ -213,13 +216,17 @@ helgrind: $(D_REP)
 	@$(MAKE) logclean
 
 break: $(D_REP)wrap.so
-	@$(MAKE) all
+	@if ! echo "$(word 2,$(MAKECMDGOALS))" | grep -Eq '^(philo|philo_bonus)$$'; then	\
+		echo "\e[1;31m🍁 - Error: Missing program name before parameters - 🍁\e[0m";	\
+		exit 1;	\
+	fi
+	@$(MAKE) $(word 2,$(MAKECMDGOALS))
 	@ARGS="$(filter-out $@,$(MAKECMDGOALS))"; \
 	LD_PRELOAD=$(D_REP)wrap.so	\
 	valgrind --leak-check=full	\
 	--show-leak-kinds=all		\
 	--track-origins=yes			\
-	./philo $$ARGS
+	./$$ARGS
 
 rmv:
 	@$(RM) $(wildcard $(D_REP)*.log)
